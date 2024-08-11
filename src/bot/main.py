@@ -1,4 +1,5 @@
 from db.utils import (
+    add_user_if_not_exists,
     add_word_to_vocabulary,
     get_user_vocabulary,
     is_word_in_vocabulary,
@@ -14,6 +15,7 @@ from src.dictionary import get_word_meaning
 def send_command(message):
     logger.info(f"Received a command: {message.text}")
     if message.text == "/start":
+        add_user_if_not_exists(message.chat.id)
         bot.send_message(
             message.chat.id,
             "Welcome to the Vocabulary bot!\n\n"

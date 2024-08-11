@@ -1,5 +1,7 @@
 .env
+.idea/
 .venv/
 __pycache__/
 __pypackages__/
+alembic.ini
 logs.log

@@ -11,6 +11,7 @@
     cp .env.example .env
     ```
 3. Install dependencies: `pip install -r requirements.txt`
-4. Perform a model-based database migration to `models.py`
-5. Run the bot: `python src/bot/main.py`
-6. Run the scheduler: `python src/scheduler.py`
+4. Set up Alembic: `alembic init alembic` and edit `sqlalchemy.url` in `alembic.ini`
+5. Migrate the database: `alembic upgrade head`
+6. Run the bot: `python src/bot/main.py`
+7. Run the scheduler: `python src/scheduler.py`

@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from db.models import Cards, Status
+from db.models import Cards, Status, Users
 from settings import engine, logger
 from sqlalchemy.orm import Session
 
@@ -111,3 +111,12 @@ def is_word_in_vocabulary(telegram_id, word):
             )
             .first()
         )
+
+
+def add_user_if_not_exists(telegram_id):
+    with Session(engine) as session:
+        user = session.query(Users).filter(Users.telegram_id == telegram_id)
+        if not user.first():
+            user = Users(telegram_id=telegram_id)
+            session.add(user)
+            session.commit()
