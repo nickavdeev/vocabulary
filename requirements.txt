@@ -1,4 +1,5 @@
 alembic==1.13.2
+beautifulsoup4==4.12.3
 psycopg2-binary==2.9.9
 pyTelegramBotAPI==4.12.0
 python-dotenv==1.0.0
