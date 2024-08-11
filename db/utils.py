@@ -84,9 +84,13 @@ def add_word_to_vocabulary(telegram_id, word):
 
 def get_user_vocabulary(telegram_id):
     with Session(engine) as session:
+        user_language = get_user_language(telegram_id)
         cards = (
             session.query(Cards)
-            .filter(Cards.telegram_id == telegram_id)
+            .filter(
+                Cards.telegram_id == telegram_id,
+                Cards.language == user_language,
+            )
             .order_by(
                 Cards.status.desc(),
                 Cards.phase,
