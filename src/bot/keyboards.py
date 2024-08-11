@@ -14,3 +14,20 @@ def get_word_keyboard(word) -> InlineKeyboardMarkup:
         ),
     )
     return keyboard
+
+
+def get_language_keyboard() -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(
+        row_width=2,
+    )
+    keyboard.add(
+        InlineKeyboardButton(
+            text="🇬🇧 English",
+            callback_data="en",
+        ),
+        InlineKeyboardButton(
+            text="🇩🇪 German",
+            callback_data="de",
+        ),
+    )
+    return keyboard

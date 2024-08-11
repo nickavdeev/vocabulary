@@ -1,25 +1,31 @@
 from db.utils import (
     add_user_if_not_exists,
     add_word_to_vocabulary,
+    get_user_language,
     get_user_vocabulary,
     is_word_in_vocabulary,
+    update_user_language,
 )
 from settings import bot, logger
 
-from src.bot.keyboards import get_word_keyboard
-from src.constants import ADD_TO_VOCABULARY_CALLBACK, WORD_IN_VOCABULARY
+from src.bot.keyboards import get_language_keyboard, get_word_keyboard
+from src.constants import (
+    ADD_TO_VOCABULARY_CALLBACK,
+    WELCOME_MESSAGE,
+    WORD_IN_VOCABULARY,
+)
 from src.dictionary import get_word_meaning
 
 
-@bot.message_handler(commands=["start", "vocabulary"])
+@bot.message_handler(commands=["start", "vocabulary", "language"])
 def send_command(message):
     logger.info(f"Received a command: {message.text}")
     if message.text == "/start":
         add_user_if_not_exists(message.chat.id)
         bot.send_message(
             message.chat.id,
-            "Welcome to the Vocabulary bot!\n\n"
-            "Send me a word and I'll provide you with its meaning.",
+            WELCOME_MESSAGE,
+            parse_mode="HTML",
         )
     elif message.text == "/vocabulary":
         words = get_user_vocabulary(message.chat.id)
@@ -43,15 +49,23 @@ def send_command(message):
             text,
             parse_mode="HTML",
         )
+    elif message.text == "/language":
+        bot.send_message(
+            message.chat.id,
+            "Choose the language you want to learn",
+            reply_markup=get_language_keyboard(),
+        )
 
 
 @bot.message_handler(content_types=["text"])
 def send_message(message):
     logger.info(f"Received a message: {message.text} from {message.chat.id}")
-    ok, text = get_word_meaning(message.text)
+
+    user_language = get_user_language(message.chat.id)
+    ok, text = get_word_meaning(message.text, user_language)
     keyboard = get_word_keyboard(message.text) if ok else None
 
-    if is_word_in_vocabulary(message.chat.id, message.text):
+    if is_word_in_vocabulary(message.chat.id, message.text, user_language):
         text += f"\n{WORD_IN_VOCABULARY}"
         keyboard = None
 
@@ -74,6 +88,14 @@ def callback_inline(call):
             chat_id=call.message.chat.id,
             message_id=call.message.message_id,
             text=f"{call.message.text}\n\n{text}",
+        )
+    elif call.data in ("en", "de"):
+        update_user_language(call.message.chat.id, call.data)
+        bot.edit_message_text(
+            chat_id=call.message.chat.id,
+            message_id=call.message.message_id,
+            text="Language successfully updated",
+            parse_mode="HTML",
         )
 
 

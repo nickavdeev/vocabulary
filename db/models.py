@@ -29,6 +29,7 @@ class Users(BaseModel):
     __tablename__ = "users"
 
     telegram_id = Column(Integer(), primary_key=True)
+    language = Column(String(5), nullable=False, default="en")
 
     created_at = Column(DateTime(), default=datetime.now)
     updated_at = Column(
@@ -51,6 +52,7 @@ class Cards(BaseModel):
     phase = Column(Integer(), default=1)
     next_repetition_on = Column(Date(), default=datetime.now)
     status = Column(Enum(Status), default=Status.in_progress)
+    language = Column(String(5), nullable=False, default="en")
 
     created_at = Column(DateTime(), default=datetime.now)
     updated_at = Column(

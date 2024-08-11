@@ -7,6 +7,19 @@ from sqlalchemy.orm import Session
 from src.constants import ADDED_TO_VOCABULARY, DAYS_BY_PHASES
 
 
+def get_user_language(telegram_id):
+    with Session(engine) as session:
+        user = session.query(Users).get(telegram_id)
+        return user.language
+
+
+def update_user_language(telegram_id, language):
+    with Session(engine) as session:
+        user = session.query(Users).get(telegram_id)
+        user.language = language
+        session.commit()
+
+
 def get_data_to_repeat():
     with Session(engine) as session:
         data = (
@@ -52,21 +65,11 @@ def update_word_phase(card_id, next_repetition_on):
 
 def add_word_to_vocabulary(telegram_id, word):
     with Session(engine) as session:
-        card = (
-            session.query(Cards)
-            .filter(
-                Cards.telegram_id == telegram_id,
-                Cards.word == word,
-            )
-            .first()
-        )
-        if card:
-            return False, "Word already exists in your /vocabulary"
-
         try:
             new_card = Cards(
                 telegram_id=telegram_id,
                 word=word,
+                language=get_user_language(telegram_id),
                 next_repetition_on=datetime.now().date()
                 + timedelta(days=DAYS_BY_PHASES[0]),
             )
@@ -101,13 +104,14 @@ def get_user_vocabulary(telegram_id):
     ]
 
 
-def is_word_in_vocabulary(telegram_id, word):
+def is_word_in_vocabulary(telegram_id, word, language):
     with Session(engine) as session:
         return bool(
             session.query(Cards)
             .filter(
                 Cards.telegram_id == telegram_id,
                 Cards.word == word,
+                Cards.language == language,
             )
             .first()
         )
