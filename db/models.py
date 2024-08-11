@@ -1,5 +1,5 @@
 from datetime import datetime
-from enum import StrEnum
+from enum import Enum as StrEnum  # to avoid conflict with Python versions
 
 from sqlalchemy import (
     Column,
@@ -17,9 +17,12 @@ from sqlalchemy.orm import relationship
 BaseModel = declarative_base()
 
 
-class Status(StrEnum):
+class Status(str, StrEnum):
     in_progress = "in_progress"
     learned = "learned"
+
+    def __str__(self):
+        return self.value
 
 
 class Users(BaseModel):

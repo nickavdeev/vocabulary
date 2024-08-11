@@ -10,8 +10,13 @@
     ```bash
     cp .env.example .env
     ```
-3. Install dependencies: `pip install -r requirements.txt`
-4. Set up Alembic: `alembic init alembic` and edit `sqlalchemy.url` in `alembic.ini`
-5. Migrate the database: `alembic upgrade head`
-6. Run the bot: `python src/bot/main.py`
-7. Run the scheduler: `python src/scheduler.py`
+3. Crate virtual environment and activate it:
+    ```bash
+    python -m venv .venv
+   source .venv/bin/activate
+    ```
+4. Install dependencies: `pip install -r requirements.txt`
+5. Set up Alembic: edit `sqlalchemy.url` in `alembic.ini`
+6. Migrate the database: `alembic upgrade head`
+7. Run the bot: `python src/bot/main.py`
+8. Run the scheduler: `python src/scheduler.py`
