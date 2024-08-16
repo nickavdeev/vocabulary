@@ -3,7 +3,7 @@ from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
 from src.constants import ADD_TO_VOCABULARY_CALLBACK
 
 
-def get_word_keyboard(word) -> InlineKeyboardMarkup:
+def get_word_keyboard(word: str) -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(
         row_width=1,
     )

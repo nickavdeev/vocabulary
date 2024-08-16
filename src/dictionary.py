@@ -3,18 +3,20 @@ from urllib.parse import quote
 import requests
 from bs4 import BeautifulSoup
 
+from src.types import WordMeaning
+
 
 EN_API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en"
 DE_API_URL = "https://en.wiktionary.org/api/rest_v1/page/definition"
 
 
-def decode_string(encoded_string):
+def decode_string(encoded_string: str) -> str:
     soup = BeautifulSoup(encoded_string, "html.parser")
     final_string = soup.get_text()
     return final_string
 
 
-def get_en_word_meaning(word):
+def get_en_word_meaning(word: str) -> WordMeaning:
     word = quote(word.strip().lower().replace("/", ""))
 
     result = requests.get(f"{EN_API_URL}/{word}").json()
@@ -32,11 +34,10 @@ def get_en_word_meaning(word):
             example = definition.get("example", "")
             if example:
                 text += f"<i>Example: {example}</i>\n"
-
     return True, text
 
 
-def get_de_word_meaning(word):
+def get_de_word_meaning(word: str) -> WordMeaning:
     prepared_word = quote(word.strip().replace("/", ""))
 
     result = requests.get(f"{DE_API_URL}/{prepared_word}").json()
@@ -57,12 +58,14 @@ def get_de_word_meaning(word):
             examples = definition.get("examples", [])
             if examples:
                 text += f"<i>Example: {decode_string(examples[0])}</i>\n"
-
     return True, text
 
 
-def get_word_meaning(word, language):
-    if language == "en":
-        return get_en_word_meaning(word)
-    elif language == "de":
-        return get_de_word_meaning(word)
+def get_word_meaning(word: str, language: str) -> WordMeaning:
+    try:
+        if language == "en":
+            return get_en_word_meaning(word)
+        elif language == "de":
+            return get_de_word_meaning(word)
+    except Exception as e:
+        return False, f"Error occurred: {e}"

@@ -9,6 +9,8 @@ from src.constants import DAYS_BY_PHASES
 
 @repeat(every().day.at("10:00", "UTC"))
 def send_remember_message():
+    """Send a reminder to repeat words"""
+
     logger.info("Sending a reminder to repeat words")
     data = get_data_to_repeat()
     if not data:

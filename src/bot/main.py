@@ -7,6 +7,7 @@ from db.utils import (
     update_user_language,
 )
 from settings import bot, logger
+from telebot.types import CallbackQuery, Message
 
 from src.bot.keyboards import get_language_keyboard, get_word_keyboard
 from src.constants import (
@@ -18,7 +19,7 @@ from src.dictionary import get_word_meaning
 
 
 @bot.message_handler(commands=["start", "vocabulary", "language"])
-def send_command(message):
+def send_command(message: Message):
     logger.info(f"Received a command: {message.text}")
     if message.text == "/start":
         add_user_if_not_exists(message.chat.id)
@@ -58,11 +59,14 @@ def send_command(message):
 
 
 @bot.message_handler(content_types=["text"])
-def send_message(message):
+def send_message(message: Message):
     logger.info(f"Received a message: {message.text} from {message.chat.id}")
 
     user_language = get_user_language(message.chat.id)
     ok, text = get_word_meaning(message.text, user_language)
+    if not ok:
+        logger.info(text)
+        text = f"Word not found: {message.text}"
     keyboard = get_word_keyboard(message.text) if ok else None
 
     if is_word_in_vocabulary(message.chat.id, message.text, user_language):
@@ -78,7 +82,7 @@ def send_message(message):
 
 
 @bot.callback_query_handler(func=lambda call: True)
-def callback_inline(call):
+def callback_inline(call: CallbackQuery):
     logger.info(f"Received a callback: {call.data}")
     if call.data.startswith(ADD_TO_VOCABULARY_CALLBACK):
         word = call.data.split("-")[1]

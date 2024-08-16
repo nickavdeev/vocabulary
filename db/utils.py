@@ -5,22 +5,23 @@ from settings import engine, logger
 from sqlalchemy.orm import Session
 
 from src.constants import ADDED_TO_VOCABULARY, DAYS_BY_PHASES
+from src.types import UserId, UserLanguage
 
 
-def get_user_language(telegram_id):
+def get_user_language(telegram_id: UserId) -> UserLanguage:
     with Session(engine) as session:
         user = session.query(Users).get(telegram_id)
         return user.language
 
 
-def update_user_language(telegram_id, language):
+def update_user_language(telegram_id: UserId, language: str) -> None:
     with Session(engine) as session:
         user = session.query(Users).get(telegram_id)
         user.language = language
         session.commit()
 
 
-def get_data_to_repeat():
+def get_data_to_repeat() -> dict:
     with Session(engine) as session:
         data = (
             session.query(Cards)
@@ -49,7 +50,7 @@ def get_data_to_repeat():
     return notifications
 
 
-def update_word_phase(card_id, next_repetition_on):
+def update_word_phase(card_id: int, next_repetition_on: datetime.date) -> None:
     with Session(engine) as session:
         try:
             card = session.query(Cards).get(card_id)
@@ -63,7 +64,7 @@ def update_word_phase(card_id, next_repetition_on):
         session.commit()
 
 
-def add_word_to_vocabulary(telegram_id, word):
+def add_word_to_vocabulary(telegram_id: UserId, word: str) -> tuple[bool, str]:
     with Session(engine) as session:
         try:
             new_card = Cards(
@@ -82,7 +83,7 @@ def add_word_to_vocabulary(telegram_id, word):
             return False, error_message
 
 
-def get_user_vocabulary(telegram_id):
+def get_user_vocabulary(telegram_id: UserId) -> list[dict]:
     with Session(engine) as session:
         user_language = get_user_language(telegram_id)
         cards = (
@@ -108,20 +109,22 @@ def get_user_vocabulary(telegram_id):
     ]
 
 
-def is_word_in_vocabulary(telegram_id, word, language):
+def is_word_in_vocabulary(
+    telegram_id: UserId, word: str, language: UserLanguage
+) -> bool:
     with Session(engine) as session:
         return bool(
             session.query(Cards)
             .filter(
                 Cards.telegram_id == telegram_id,
-                Cards.word == word,
+                Cards.word == word,  # noqa
                 Cards.language == language,
             )
             .first()
         )
 
 
-def add_user_if_not_exists(telegram_id):
+def add_user_if_not_exists(telegram_id: UserId) -> None:
     with Session(engine) as session:
         user = session.query(Users).filter(Users.telegram_id == telegram_id)
         if not user.first():
