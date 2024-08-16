@@ -4,6 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 from src.types import WordMeaning
+from settings import logger
 
 
 EN_API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en"
@@ -20,6 +21,7 @@ def get_en_word_meaning(word: str) -> WordMeaning:
     word = quote(word.strip().lower().replace("/", ""))
 
     result = requests.get(f"{EN_API_URL}/{word}").json()
+    logger.info(result)
     if not isinstance(result, list):
         return False, "Word not found"
 
@@ -41,6 +43,7 @@ def get_de_word_meaning(word: str) -> WordMeaning:
     prepared_word = quote(word.strip().replace("/", ""))
 
     result = requests.get(f"{DE_API_URL}/{prepared_word}").json()
+    logger.info(result)
     if not result.get("de"):
         capitalized_word = quote(word.strip().capitalize().replace("/", ""))
         result = requests.get(f"{DE_API_URL}/{capitalized_word}").json()
