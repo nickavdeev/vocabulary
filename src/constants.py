@@ -4,7 +4,7 @@ ADDED_TO_VOCABULARY = "✔️ Added to vocabulary"
 WORD_IN_VOCABULARY = "✔️ <i>This word is already in your vocabulary</i>"
 
 WELCOME_MESSAGE = (
-    "👋 <b>Welcome to the Vocabulary Builder bot!</b>\n\n"
+    "👋 <b>Welcome to the Vocabulary Bot!</b>\n\n"
     "Here you can learn new words of a foreign language.\n\n"
     "Use the following commands to interact with the bot:\n"
     "/language - change the language you want to learn\n"
@@ -19,4 +19,9 @@ DAYS_BY_PHASES = {
     4: 39,
     5: 97,
     6: 0,
+}
+
+VISIBLE_LANGUAGES = {
+    "en": "🇬🇧 English",
+    "de": "🇩🇪 German",
 }

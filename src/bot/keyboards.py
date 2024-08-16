@@ -1,6 +1,11 @@
-from telebot.types import InlineKeyboardButton, InlineKeyboardMarkup
+from telebot.types import (
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    KeyboardButton,
+    ReplyKeyboardMarkup,
+)
 
-from src.constants import ADD_TO_VOCABULARY_CALLBACK
+from src.constants import ADD_TO_VOCABULARY_CALLBACK, VISIBLE_LANGUAGES
 
 
 def get_word_keyboard(word: str) -> InlineKeyboardMarkup:
@@ -20,14 +25,23 @@ def get_language_keyboard() -> InlineKeyboardMarkup:
     keyboard = InlineKeyboardMarkup(
         row_width=2,
     )
+    for language_code, visible_name in VISIBLE_LANGUAGES.items():
+        keyboard.add(
+            InlineKeyboardButton(
+                text=visible_name,
+                callback_data=language_code,
+            ),
+        )
+    return keyboard
+
+
+def get_main_keyboard() -> ReplyKeyboardMarkup:
+    keyboard = ReplyKeyboardMarkup(
+        row_width=1,
+        resize_keyboard=True,
+    )
     keyboard.add(
-        InlineKeyboardButton(
-            text="🇬🇧 English",
-            callback_data="en",
-        ),
-        InlineKeyboardButton(
-            text="🇩🇪 German",
-            callback_data="de",
-        ),
+        KeyboardButton(text="/vocabulary"),
+        KeyboardButton(text="/language"),
     )
     return keyboard

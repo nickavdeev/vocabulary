@@ -83,30 +83,32 @@ def add_word_to_vocabulary(telegram_id: UserId, word: str) -> tuple[bool, str]:
             return False, error_message
 
 
-def get_user_vocabulary(telegram_id: UserId) -> list[dict]:
+def get_user_vocabulary(telegram_id: UserId) -> dict:
     with Session(engine) as session:
-        user_language = get_user_language(telegram_id)
         cards = (
             session.query(Cards)
             .filter(
-                Cards.telegram_id == telegram_id,
-                Cards.language == user_language,
+                Cards.telegram_id == telegram_id,  # noqa
             )
             .order_by(
-                Cards.status.desc(),
-                Cards.phase,
+                Cards.language,
                 Cards.next_repetition_on,
             )
             .all()
         )
-    return [
-        {
-            "word": card.word,
-            "status": card.status,
-            "next_repetition": card.next_repetition_on,
-        }
-        for card in cards
-    ]
+    data_by_languages = {}
+    for card in cards:
+        data_by_languages[card.language] = data_by_languages.get(
+            card.language, []
+        )
+        data_by_languages[card.language].append(
+            {
+                "word": card.word,
+                "status": card.status,
+                "next_repetition": card.next_repetition_on,
+            }
+        )
+    return data_by_languages
 
 
 def is_word_in_vocabulary(
