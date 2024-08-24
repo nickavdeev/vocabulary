@@ -5,7 +5,15 @@ from telebot.types import (
     ReplyKeyboardMarkup,
 )
 
-from src.constants import ADD_TO_VOCABULARY_CALLBACK, VISIBLE_LANGUAGES
+from src.constants import (
+    ADD_TO_VOCABULARY_CALLBACK,
+    BUTTON_LANGUAGE,
+    BUTTON_VOCABULARY,
+    VISIBLE_LANGUAGES,
+)
+
+
+MAIN_MENU_BUTTONS = [BUTTON_VOCABULARY, BUTTON_LANGUAGE]
 
 
 def get_word_keyboard(word: str) -> InlineKeyboardMarkup:
@@ -40,8 +48,8 @@ def get_main_keyboard() -> ReplyKeyboardMarkup:
         row_width=1,
         resize_keyboard=True,
     )
-    keyboard.add(
-        KeyboardButton(text="/vocabulary"),
-        KeyboardButton(text="/language"),
-    )
+    for button in MAIN_MENU_BUTTONS:
+        keyboard.add(
+            KeyboardButton(text=button),
+        )
     return keyboard

@@ -25,3 +25,8 @@ VISIBLE_LANGUAGES = {
     "en": "🇬🇧 English",
     "de": "🇩🇪 German",
 }
+
+# Button names
+
+BUTTON_VOCABULARY = "📚 Vocabulary"
+BUTTON_LANGUAGE = "🌍 Language"

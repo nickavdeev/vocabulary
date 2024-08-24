@@ -10,12 +10,15 @@ from settings import bot, logger
 from telebot.types import CallbackQuery, Message
 
 from src.bot.keyboards import (
+    MAIN_MENU_BUTTONS,
     get_language_keyboard,
     get_main_keyboard,
     get_word_keyboard,
 )
 from src.constants import (
     ADD_TO_VOCABULARY_CALLBACK,
+    BUTTON_LANGUAGE,
+    BUTTON_VOCABULARY,
     VISIBLE_LANGUAGES,
     WELCOME_MESSAGE,
     WORD_IN_VOCABULARY,
@@ -25,6 +28,7 @@ from src.dictionary import get_word_meaning
 
 
 @bot.message_handler(commands=["start", "vocabulary", "language"])
+@bot.message_handler(func=lambda message: message.text in MAIN_MENU_BUTTONS)
 def send_command(message: Message):
     logger.info(f"Received a command: {message.text}")
     chat_id = UserId(message.chat.id)
@@ -36,7 +40,7 @@ def send_command(message: Message):
             parse_mode="HTML",
             reply_markup=get_main_keyboard(),
         )
-    elif message.text == "/vocabulary":
+    elif message.text in ["/vocabulary", BUTTON_VOCABULARY]:
         words = get_user_vocabulary(chat_id)
         if not words:
             bot.send_message(
@@ -46,12 +50,12 @@ def send_command(message: Message):
             return
 
         with_language_title = len(words) > 1
-        text = "<b>Your vocabulary</b>\n\n"
+        text = "<b>Your vocabulary</b>\n"
         for language in words:
             text += (
-                f"{VISIBLE_LANGUAGES[language]}\n"
+                f"\n{VISIBLE_LANGUAGES[language]}\n"
                 if with_language_title
-                else ""
+                else "\n"
             )
             for i, word in enumerate(words[language], start=1):
                 additional_text = "learned"
@@ -69,7 +73,7 @@ def send_command(message: Message):
             text,
             parse_mode="HTML",
         )
-    elif message.text == "/language":
+    elif message.text in ["/language", BUTTON_LANGUAGE]:
         bot.send_message(
             message.chat.id,
             "Choose the language you want to learn",
@@ -122,7 +126,7 @@ def callback_inline(call: CallbackQuery):
             chat_id=call.message.chat.id,
             message_id=call.message.message_id,
             text=(
-                "Language successfully updated: "
+                "Language successfully updated:\n"
                 f"<b>{VISIBLE_LANGUAGES[call.data]}</b>"
             ),
             parse_mode="HTML",
