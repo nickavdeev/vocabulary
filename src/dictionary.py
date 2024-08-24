@@ -3,7 +3,7 @@ from urllib.parse import quote
 import requests
 from bs4 import BeautifulSoup
 
-from src.types import WordMeaning
+from src.custom_types import WordMeaning
 
 
 EN_API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en"

@@ -5,7 +5,7 @@ from settings import engine, logger
 from sqlalchemy.orm import Session
 
 from src.constants import ADDED_TO_VOCABULARY, DAYS_BY_PHASES
-from src.types import UserId, UserLanguage
+from src.custom_types import UserId, UserLanguage
 
 
 def get_user_language(telegram_id: UserId) -> UserLanguage:

@@ -20,8 +20,8 @@ from src.constants import (
     WELCOME_MESSAGE,
     WORD_IN_VOCABULARY,
 )
+from src.custom_types import UserId
 from src.dictionary import get_word_meaning
-from src.types import UserId
 
 
 @bot.message_handler(commands=["start", "vocabulary", "language"])
