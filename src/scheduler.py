@@ -1,8 +1,10 @@
 from datetime import timedelta
 
-from db.utils import get_data_to_repeat, update_word_phase
+from db.models import UserStatus
+from db.utils import get_data_to_repeat, update_user_status, update_word_phase
 from schedule import every, repeat, run_pending
 from settings import bot, logger
+from telebot.apihelper import ApiTelegramException
 
 from src.constants import DAYS_BY_PHASES
 
@@ -29,7 +31,21 @@ def send_remember_message():
 
             text += f"{i}. {word_data['word']}\n"
             update_word_phase(word_data["id"], next_repetition_time)
-        bot.send_message(telegram_id, text, parse_mode="HTML")
+
+        try:
+            bot.send_message(telegram_id, text, parse_mode="HTML")
+        except ApiTelegramException as e:
+            if e.error_code == 403:  # Forbidden
+                update_user_status(telegram_id, UserStatus.inactive)
+            logger.info(
+                f"The user {telegram_id} failed to send a reminder: "
+                f"{e.description}"
+            )
+            continue
+        except Exception as e:
+            logger.error(f"Failed to send a reminder: {e}")
+            continue
+
         logger.info(f"Reminder sent to {telegram_id}")
 
 

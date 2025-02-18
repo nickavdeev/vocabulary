@@ -25,11 +25,20 @@ class Status(str, StrEnum):
         return self.value
 
 
+class UserStatus(str, StrEnum):
+    active = "active"
+    inactive = "inactive"
+
+    def __str__(self):
+        return self.value
+
+
 class Users(BaseModel):
     __tablename__ = "users"
 
     telegram_id = Column(Integer(), primary_key=True)
     language = Column(String(5), nullable=False, default="en")
+    status = Column(Enum(UserStatus), nullable=False, default=UserStatus.active)
 
     created_at = Column(DateTime(), default=datetime.now)
     updated_at = Column(

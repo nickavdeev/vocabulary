@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from db.models import Cards, Status, Users
+from db.models import Cards, Status, Users, UserStatus
 from settings import engine, logger
 from sqlalchemy.orm import Session
 
@@ -18,6 +18,13 @@ def update_user_language(telegram_id: UserId, language: str) -> None:
     with Session(engine) as session:
         user = session.query(Users).get(telegram_id)
         user.language = language
+        session.commit()
+
+
+def update_user_status(telegram_id: UserId, status: UserStatus) -> None:
+    with Session(engine) as session:
+        user = session.query(Users).get(telegram_id)
+        user.status = status
         session.commit()
 
 
