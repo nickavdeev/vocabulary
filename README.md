@@ -15,7 +15,11 @@
     python -m venv .venv
    source .venv/bin/activate
     ```
-4. Install dependencies: `pip install -r requirements.txt`
+4. Install dependencies: 
+    ```bash
+    pip install -r requirements.txt
+    pip install -r requirements-dev.txt
+    ```
 5. Create `alembic.ini` in root and set up `sqlalchemy.url`
 6. Migrate the database: `alembic upgrade head`
 7. Run the bot: `python src/bot/main.py`
