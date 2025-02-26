@@ -31,7 +31,6 @@ def send_remember_message():
 
             text += f"{i}. {word_data['word']}\n"
             update_word_phase(word_data["id"], next_repetition_time)
-
         try:
             bot.send_message(telegram_id, text, parse_mode="HTML")
         except ApiTelegramException as e:

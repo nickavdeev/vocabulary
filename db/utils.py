@@ -2,45 +2,46 @@ from datetime import datetime, timedelta
 
 from db.models import Cards, Status, Users, UserStatus
 from settings import engine, logger
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 from src.constants import ADDED_TO_VOCABULARY, DAYS_BY_PHASES
 from src.custom_types import UserId, UserLanguage
 
 
+session_factory = sessionmaker(bind=engine)
+session = scoped_session(session_factory)
+logger.info("Session created")
+
+
 def get_user_language(telegram_id: UserId) -> UserLanguage:
-    with Session(engine) as session:
-        user = session.query(Users).get(telegram_id)
-        return user.language
+    user = session.query(Users).get(telegram_id)
+    return user.language
 
 
 def update_user_language(telegram_id: UserId, language: str) -> None:
-    with Session(engine) as session:
-        user = session.query(Users).get(telegram_id)
-        user.language = language
-        session.commit()
+    user = session.query(Users).get(telegram_id)
+    user.language = language
+    session.commit()
 
 
 def update_user_status(telegram_id: UserId, status: UserStatus) -> None:
-    with Session(engine) as session:
-        user = session.query(Users).get(telegram_id)
-        user.status = status
-        session.commit()
+    user = session.query(Users).get(telegram_id)
+    user.status = status
+    session.commit()
 
 
 def get_data_to_repeat() -> dict:
-    with Session(engine) as session:
-        data = (
-            session.query(Cards)
-            .filter(Cards.next_repetition_on <= datetime.now().date())
-            .filter(Cards.status.in_([Status.in_progress]))
-            .order_by(
-                Cards.telegram_id,
-                Cards.phase,
-                Cards.next_repetition_on,
-            )
-            .all()
+    data = (
+        session.query(Cards)
+        .filter(Cards.next_repetition_on <= datetime.now().date())
+        .filter(Cards.status.in_([Status.in_progress]))
+        .order_by(
+            Cards.telegram_id,
+            Cards.phase,
+            Cards.next_repetition_on,
         )
+        .all()
+    )
 
     notifications = {}
     for card in data:
@@ -58,51 +59,50 @@ def get_data_to_repeat() -> dict:
 
 
 def update_word_phase(card_id: int, next_repetition_on: datetime.date) -> None:
-    with Session(engine) as session:
-        try:
-            card = session.query(Cards).get(card_id)
-            card.next_repetition_on = next_repetition_on
-            session.flush()
-        except Exception as e:
-            logger.error(f"Error occurred while updating word phase: {e}")
+    card = session.query(Cards).get(card_id)
+    try:
+        card.next_repetition_on = next_repetition_on
+        session.flush()
+    except Exception as e:
+        logger.error(f"Error occurred while updating word phase: {e}")
 
-        card.phase += 1
-        card.status = Status.learned if card.phase == 6 else Status.in_progress
-        session.commit()
+    card.phase += 1
+    card.status = Status.learned if card.phase == 6 else Status.in_progress
+    session.commit()
 
 
 def add_word_to_vocabulary(telegram_id: UserId, word: str) -> tuple[bool, str]:
-    with Session(engine) as session:
-        try:
-            new_card = Cards(
-                telegram_id=telegram_id,
-                word=word,
-                language=get_user_language(telegram_id),
-                next_repetition_on=datetime.now().date()
-                + timedelta(days=DAYS_BY_PHASES[0]),
-            )
-            session.add(new_card)
-            session.commit()
-            return True, ADDED_TO_VOCABULARY
-        except Exception as e:
-            error_message = "Error occurred while adding a word to vocabulary"
-            logger.error(f"{error_message}: {e}")
-            return False, error_message
+    try:
+        new_card = Cards(
+            telegram_id=telegram_id,
+            word=word,
+            language=get_user_language(telegram_id),
+            next_repetition_on=(
+                datetime.now().date() + timedelta(days=DAYS_BY_PHASES[0])
+            ),
+        )
+        session.add(new_card)
+        session.commit()
+        return True, ADDED_TO_VOCABULARY
+    except Exception as e:
+        error_message = "Error occurred while adding a word to vocabulary"
+        logger.error(f"{error_message}: {e}")
+        return False, error_message
 
 
 def get_user_vocabulary(telegram_id: UserId) -> dict:
-    with Session(engine) as session:
-        cards = (
-            session.query(Cards)
-            .filter(
-                Cards.telegram_id == telegram_id,  # noqa
-            )
-            .order_by(
-                Cards.language,
-                Cards.next_repetition_on,
-            )
-            .all()
+    cards = (
+        session.query(Cards)
+        .filter(
+            Cards.telegram_id == telegram_id,  # noqa
         )
+        .order_by(
+            Cards.language,
+            Cards.next_repetition_on,
+        )
+        .all()
+    )
+
     data_by_languages = {}
     for card in cards:
         data_by_languages[card.language] = data_by_languages.get(
@@ -121,22 +121,20 @@ def get_user_vocabulary(telegram_id: UserId) -> dict:
 def is_word_in_vocabulary(
     telegram_id: UserId, word: str, language: UserLanguage
 ) -> bool:
-    with Session(engine) as session:
-        return bool(
-            session.query(Cards)
-            .filter(
-                Cards.telegram_id == telegram_id,
-                Cards.word == word,  # noqa
-                Cards.language == language,
-            )
-            .first()
+    return bool(
+        session.query(Cards)
+        .filter(
+            Cards.telegram_id == telegram_id,
+            Cards.word == word,
+            Cards.language == language,
         )
+        .first()
+    )
 
 
 def add_user_if_not_exists(telegram_id: UserId) -> None:
-    with Session(engine) as session:
-        user = session.query(Users).filter(Users.telegram_id == telegram_id)
-        if not user.first():
-            user = Users(telegram_id=telegram_id)
-            session.add(user)
-            session.commit()
+    user = session.query(Users).filter(Users.telegram_id == telegram_id)
+    if not user.first():
+        user = Users(telegram_id=telegram_id)
+        session.add(user)
+        session.commit()

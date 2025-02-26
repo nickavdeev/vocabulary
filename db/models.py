@@ -38,7 +38,9 @@ class Users(BaseModel):
 
     telegram_id = Column(Integer(), primary_key=True)
     language = Column(String(5), nullable=False, default="en")
-    status = Column(Enum(UserStatus), nullable=False, default=UserStatus.active)
+    status = Column(
+        Enum(UserStatus), nullable=False, default=UserStatus.active
+    )
 
     created_at = Column(DateTime(), default=datetime.now)
     updated_at = Column(

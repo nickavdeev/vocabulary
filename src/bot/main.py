@@ -4,6 +4,7 @@ from db.utils import (
     get_user_language,
     get_user_vocabulary,
     is_word_in_vocabulary,
+    session,
     update_user_language,
 )
 from settings import bot, logger
@@ -136,3 +137,6 @@ def callback_inline(call: CallbackQuery):
 if __name__ == "__main__":
     logger.info("Bot started")
     bot.infinity_polling()
+    logger.info("Bot stopped")
+    session.close()
+    logger.info("Session closed")
