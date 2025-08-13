@@ -4,7 +4,7 @@ from db.models import Cards, Status, Users, UserStatus
 from settings import engine, logger
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from src.constants import ADDED_TO_VOCABULARY, DAYS_BY_PHASES
+from src.constants import ADDED_TO_VOCABULARY_TEXT, DAYS_BY_PHASES
 from src.custom_types import UserId, UserLanguage
 
 
@@ -83,39 +83,28 @@ def add_word_to_vocabulary(telegram_id: UserId, word: str) -> tuple[bool, str]:
         )
         session.add(new_card)
         session.commit()
-        return True, ADDED_TO_VOCABULARY
+        return True, ADDED_TO_VOCABULARY_TEXT
     except Exception as e:
         error_message = "Error occurred while adding a word to vocabulary"
         logger.error(f"{error_message}: {e}")
         return False, error_message
 
 
-def get_user_vocabulary(telegram_id: UserId) -> dict:
+def get_user_vocabulary(telegram_id: UserId) -> list[dict]:
     cards = (
         session.query(Cards)
-        .filter(
-            Cards.telegram_id == telegram_id,  # noqa
-        )
-        .order_by(
-            Cards.language,
-            Cards.next_repetition_on,
-        )
+        .filter_by(telegram_id=telegram_id)
+        .order_by(Cards.next_repetition_on)
         .all()
     )
-
-    data_by_languages = {}
-    for card in cards:
-        data_by_languages[card.language] = data_by_languages.get(
-            card.language, []
-        )
-        data_by_languages[card.language].append(
-            {
-                "word": card.word,
-                "status": card.status,
-                "next_repetition": card.next_repetition_on,
-            }
-        )
-    return data_by_languages
+    return [
+        {
+            "word": card.word,
+            "status": card.status,
+            "next_repetition": card.next_repetition_on,
+        }
+        for card in cards
+    ]
 
 
 def is_word_in_vocabulary(
@@ -123,17 +112,13 @@ def is_word_in_vocabulary(
 ) -> bool:
     return bool(
         session.query(Cards)
-        .filter(
-            Cards.telegram_id == telegram_id,
-            Cards.word == word,
-            Cards.language == language,
-        )
+        .filter_by(telegram_id=telegram_id, word=word, language=language)
         .first()
     )
 
 
 def add_user_if_not_exists(telegram_id: UserId) -> None:
-    user = session.query(Users).filter(Users.telegram_id == telegram_id)
+    user = session.query(Users).filter_by(telegram_id=telegram_id)
     if not user.first():
         user = Users(telegram_id=telegram_id)
         session.add(user)

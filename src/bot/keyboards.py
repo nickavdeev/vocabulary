@@ -5,15 +5,10 @@ from telebot.types import (
     ReplyKeyboardMarkup,
 )
 
-from src.constants import (
-    ADD_TO_VOCABULARY_CALLBACK,
-    BUTTON_LANGUAGE,
-    BUTTON_VOCABULARY,
-    VISIBLE_LANGUAGES,
-)
+from src.constants import ADD_TO_VOCABULARY_CALLBACK, VOCABULARY_BUTTON
 
 
-MAIN_MENU_BUTTONS = [BUTTON_VOCABULARY, BUTTON_LANGUAGE]
+MAIN_MENU_BUTTONS = [VOCABULARY_BUTTON]
 
 
 def get_word_keyboard(word: str) -> InlineKeyboardMarkup:
@@ -26,20 +21,6 @@ def get_word_keyboard(word: str) -> InlineKeyboardMarkup:
             callback_data=f"{ADD_TO_VOCABULARY_CALLBACK}-{word}",
         ),
     )
-    return keyboard
-
-
-def get_language_keyboard() -> InlineKeyboardMarkup:
-    keyboard = InlineKeyboardMarkup(
-        row_width=2,
-    )
-    for language_code, visible_name in VISIBLE_LANGUAGES.items():
-        keyboard.add(
-            InlineKeyboardButton(
-                text=visible_name,
-                callback_data=language_code,
-            ),
-        )
     return keyboard
 
 

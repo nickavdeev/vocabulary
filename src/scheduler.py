@@ -38,7 +38,7 @@ def send_remember_message():
                 update_user_status(telegram_id, UserStatus.inactive)
             logger.info(
                 f"The user {telegram_id} failed to send a reminder: "
-                f"{e.description}"
+                f"{e.error_code}, {e.description}"
             )
             continue
         except Exception as e:

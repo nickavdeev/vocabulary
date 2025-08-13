@@ -5,24 +5,21 @@ from db.utils import (
     get_user_vocabulary,
     is_word_in_vocabulary,
     session,
-    update_user_language,
 )
 from settings import bot, logger
 from telebot.types import CallbackQuery, Message
 
 from src.bot.keyboards import (
     MAIN_MENU_BUTTONS,
-    get_language_keyboard,
     get_main_keyboard,
     get_word_keyboard,
 )
 from src.constants import (
     ADD_TO_VOCABULARY_CALLBACK,
-    BUTTON_LANGUAGE,
-    BUTTON_VOCABULARY,
-    VISIBLE_LANGUAGES,
+    EMPTY_VOCABULARY_TEXT,
+    VOCABULARY_BUTTON,
     WELCOME_MESSAGE,
-    WORD_IN_VOCABULARY,
+    WORD_IN_VOCABULARY_TEXT,
 )
 from src.custom_types import UserId
 from src.dictionary import get_word_meaning
@@ -41,44 +38,28 @@ def send_command(message: Message):
             parse_mode="HTML",
             reply_markup=get_main_keyboard(),
         )
-    elif message.text in ["/vocabulary", BUTTON_VOCABULARY]:
+    elif message.text in ["/vocabulary", VOCABULARY_BUTTON]:
         words = get_user_vocabulary(chat_id)
         if not words:
             bot.send_message(
                 message.chat.id,
-                "Your vocabulary is empty",
+                EMPTY_VOCABULARY_TEXT,
+                parse_mode="HTML",
             )
             return
 
-        with_language_title = len(words) > 1
-        text = "<b>Your vocabulary</b>\n"
-        for language in words:
-            text += (
-                f"\n{VISIBLE_LANGUAGES[language]}\n"
-                if with_language_title
-                else "\n"
-            )
-            for i, word in enumerate(words[language], start=1):
-                additional_text = "learned"
-                if word["status"] == "in_progress":
-                    next_repetition = word["next_repetition"].strftime(
-                        "%d %b %Y"
-                    )
-                    additional_text = f"next repetition on {next_repetition}"
-                text += (
-                    f"{i}. <b><i>{word['word']}</i></b>, {additional_text}\n"
-                )
+        text = "<b>Your vocabulary</b>\n\n"
+        for i, word in enumerate(words, start=1):
+            additional_text = "learned"
+            if word["status"] == "in_progress":
+                next_repetition = word["next_repetition"].strftime("%d %b")
+                additional_text = f"next repetition is on {next_repetition}"
+            text += f"{i}. <b>{word['word']}</b>, <i>{additional_text}</i>\n"
 
         bot.send_message(
             message.chat.id,
             text,
             parse_mode="HTML",
-        )
-    elif message.text in ["/language", BUTTON_LANGUAGE]:
-        bot.send_message(
-            message.chat.id,
-            "Choose the language you want to learn",
-            reply_markup=get_language_keyboard(),
         )
 
 
@@ -95,7 +76,7 @@ def send_message(message: Message):
     keyboard = get_word_keyboard(message.text) if ok else None
 
     if is_word_in_vocabulary(chat_id, message.text, user_language):
-        text += f"\n{WORD_IN_VOCABULARY}"
+        text += f"\n{WORD_IN_VOCABULARY_TEXT}"
         keyboard = None
 
     bot.send_message(
@@ -119,17 +100,6 @@ def callback_inline(call: CallbackQuery):
             chat_id=call.message.chat.id,
             message_id=call.message.message_id,
             text=f"{call.message.text}\n\n{text}",
-            parse_mode="HTML",
-        )
-    elif call.data in ("en", "de"):
-        update_user_language(chat_id, call.data)
-        bot.edit_message_text(
-            chat_id=call.message.chat.id,
-            message_id=call.message.message_id,
-            text=(
-                "Language successfully updated:\n"
-                f"<b>{VISIBLE_LANGUAGES[call.data]}</b>"
-            ),
             parse_mode="HTML",
         )
 
