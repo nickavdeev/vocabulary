@@ -1,4 +1,3 @@
-import requests
 from db.utils import (
     add_user_if_not_exists,
     add_word_to_vocabulary,
