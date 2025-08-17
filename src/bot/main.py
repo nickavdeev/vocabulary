@@ -28,7 +28,7 @@ from src.custom_types import UserId
 from src.dictionary import get_word_meaning
 
 
-@bot.message_handler(commands=["start", "vocabulary", "language"])
+@bot.message_handler(commands=["start", "statistics"])
 @bot.message_handler(func=lambda message: message.text in MAIN_MENU_BUTTONS)
 def send_command(message: Message):
     logger.info(f"Received a command: {message.text}")
