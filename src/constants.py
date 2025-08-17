@@ -24,7 +24,7 @@ DAYS_BY_PHASES = {
 
 # Button names
 
-VOCABULARY_BUTTON = "📖 Vocabulary"
+STATISTICS_BUTTON = "📊 Statistics"
 
 # Texts
 
@@ -40,4 +40,9 @@ INNER_ERROR_TEXT = (
     "User: <i>{chat_id}</i>\n"
     "Message: <i>{message_text}</i>\n"
     "Error text: <pre>{error_text}</pre>"
+)
+STATISTICS_TEXT = (
+    "<b>Here is your vocabulary statistics:</b>\n\n"
+    "{words_count} {word_label} added, next repetition is on "
+    "{next_repetition}.\n\nKeep going! 🙌"
 )

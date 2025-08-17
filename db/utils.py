@@ -90,21 +90,17 @@ def add_word_to_vocabulary(telegram_id: UserId, word: str) -> tuple[bool, str]:
         return False, error_message
 
 
-def get_user_vocabulary(telegram_id: UserId) -> list[dict]:
+def get_user_vocabulary(telegram_id: UserId) -> dict:
     cards = (
         session.query(Cards)
         .filter_by(telegram_id=telegram_id)
         .order_by(Cards.next_repetition_on)
         .all()
     )
-    return [
-        {
-            "word": card.word,
-            "status": card.status,
-            "next_repetition": card.next_repetition_on,
-        }
-        for card in cards
-    ]
+    return {
+        "words_count": len(cards),
+        "next_repetition": cards[0].next_repetition_on if cards else None,
+    }
 
 
 def is_word_in_vocabulary(

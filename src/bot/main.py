@@ -19,7 +19,8 @@ from src.constants import (
     EMPTY_VOCABULARY_TEXT,
     ERROR_TEXT,
     INNER_ERROR_TEXT,
-    VOCABULARY_BUTTON,
+    STATISTICS_BUTTON,
+    STATISTICS_TEXT,
     WELCOME_MESSAGE,
     WORD_IN_VOCABULARY_TEXT,
 )
@@ -40,9 +41,13 @@ def send_command(message: Message):
             parse_mode="HTML",
             reply_markup=get_main_keyboard(),
         )
-    elif message.text in {"/vocabulary", VOCABULARY_BUTTON}:
-        words = get_user_vocabulary(chat_id)
-        if not words:
+    elif message.text in {"/statistics", STATISTICS_BUTTON}:
+        statistics = get_user_vocabulary(chat_id)
+        words_count, next_repetition = (
+            statistics["words_count"],
+            statistics["next_repetition"]
+        )
+        if not words_count:
             bot.send_message(
                 message.chat.id,
                 EMPTY_VOCABULARY_TEXT,
@@ -50,17 +55,13 @@ def send_command(message: Message):
             )
             return
 
-        text = "<b>Your vocabulary</b>\n\n"
-        for i, word in enumerate(words, start=1):
-            additional_text = "learned"
-            if word["status"] == "in_progress":
-                next_repetition = word["next_repetition"].strftime("%d %b")
-                additional_text = f"next repetition is on {next_repetition}"
-            text += f"{i}. <b>{word['word']}</b>, <i>{additional_text}</i>\n"
-
         bot.send_message(
             message.chat.id,
-            text,
+            STATISTICS_TEXT.format(
+                words_count=words_count,
+                word_label="words" if words_count > 1 else "word",
+                next_repetition=next_repetition.strftime("%d %B")
+            ),
             parse_mode="HTML",
         )
 
