@@ -65,7 +65,7 @@ def send_command(message: Message):
 
 @bot.message_handler(content_types=["text"])
 def send_message(message: Message):
-    logger.info(f"Received a message: {message.text} from {message.chat.id}")
+    logger.info(f"Received a message: `{message.text}` from {message.chat.id}")
 
     chat_id = UserId(message.chat.id)
     user_language = get_user_language(chat_id)
@@ -100,8 +100,9 @@ def callback_inline(call: CallbackQuery):
             chat_id=call.message.chat.id,
             message_id=call.message.message_id,
             text=f"{call.message.text}\n\n{text}",
-            parse_mode="HTML",
+            entities=call.message.entities,
         )
+        bot.answer_callback_query(callback_query_id=call.id, text=text)
 
 
 if __name__ == "__main__":
