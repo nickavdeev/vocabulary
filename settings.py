@@ -41,5 +41,6 @@ logger = logging.getLogger("VocabularyBot")
 
 # Telegram
 
+ADMIN_USER_TELEGRAM_ID = os.getenv("ADMIN_USER_TELEGRAM_ID")
 TOKEN = os.getenv("BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN)

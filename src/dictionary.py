@@ -1,3 +1,4 @@
+import html
 from urllib.parse import quote
 
 import requests
@@ -30,10 +31,11 @@ def get_en_word_meaning(word: str) -> WordMeaning:
 
         definitions = item.get("definitions", [])
         for definition in definitions:
-            text += f"• {definition.get('definition', '')}\n"
+            text += f"• {html.escape(definition.get('definition', ''))}\n"
             example = definition.get("example", "")
             if example:
-                text += f"<i>Example: {example}</i>\n"
+                text += f"<i>Example: {html.escape(example)}</i>\n"
+
     return True, text
 
 
@@ -54,10 +56,12 @@ def get_de_word_meaning(word: str) -> WordMeaning:
 
         definitions = item.get("definitions", [])
         for definition in definitions:
-            text += f"• {decode_string(definition.get('definition', ''))}\n"
+            definition_text = definition.get('definition', '')
+            text += f"• {html.escape(decode_string(definition_text))}\n"
             examples = definition.get("examples", [])
             if examples:
-                text += f"<i>Example: {decode_string(examples[0])}</i>\n"
+                prepared_text = html.escape(decode_string(examples[0]))
+                text += f"<i>Example: {prepared_text}</i>\n"
     return True, text
 
 

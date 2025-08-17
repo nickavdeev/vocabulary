@@ -6,7 +6,7 @@ from db.utils import (
     is_word_in_vocabulary,
     session,
 )
-from settings import bot, logger
+from settings import ADMIN_USER_TELEGRAM_ID, bot, logger
 from telebot.types import CallbackQuery, Message
 
 from src.bot.keyboards import (
@@ -17,6 +17,8 @@ from src.bot.keyboards import (
 from src.constants import (
     ADD_TO_VOCABULARY_CALLBACK,
     EMPTY_VOCABULARY_TEXT,
+    ERROR_TEXT,
+    INNER_ERROR_TEXT,
     VOCABULARY_BUTTON,
     WELCOME_MESSAGE,
     WORD_IN_VOCABULARY_TEXT,
@@ -38,7 +40,7 @@ def send_command(message: Message):
             parse_mode="HTML",
             reply_markup=get_main_keyboard(),
         )
-    elif message.text in ["/vocabulary", VOCABULARY_BUTTON]:
+    elif message.text in {"/vocabulary", VOCABULARY_BUTTON}:
         words = get_user_vocabulary(chat_id)
         if not words:
             bot.send_message(
@@ -79,12 +81,25 @@ def send_message(message: Message):
         text += f"\n{WORD_IN_VOCABULARY_TEXT}"
         keyboard = None
 
-    bot.send_message(
-        message.chat.id,
-        text,
-        parse_mode="HTML",
-        reply_markup=keyboard,
-    )
+    try:
+        bot.send_message(
+            message.chat.id,
+            text,
+            parse_mode="HTML",
+            reply_markup=keyboard,
+        )
+    except Exception as e:
+        logger.error(e)
+        bot.send_message(message.chat.id, ERROR_TEXT)
+        bot.send_message(
+            ADMIN_USER_TELEGRAM_ID,
+            INNER_ERROR_TEXT.format(
+                chat_id=message.chat.id,
+                message_text=message.text,
+                error_text=e,
+            ),
+            parse_mode="HTML",
+        )
 
 
 @bot.callback_query_handler(func=lambda call: True)

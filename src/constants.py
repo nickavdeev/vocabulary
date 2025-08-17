@@ -32,3 +32,12 @@ EMPTY_VOCABULARY_TEXT = (
     "🔎 <b>Your vocabulary is empty</b>, but you can expand it: "
     "just send me an English word, and I’ll give you its definitions."
 )
+ERROR_TEXT = (
+    "👀 Sorry, something went wrong on my side. Please try again later."
+)
+INNER_ERROR_TEXT = (
+    "💥 <b>New error</b>\n\n"
+    "User: <i>{chat_id}</i>\n"
+    "Message: <i>{message_text}</i>\n"
+    "Error text: <pre>{error_text}</pre>"
+)
