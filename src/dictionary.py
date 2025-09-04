@@ -56,7 +56,7 @@ def get_de_word_meaning(word: str) -> WordMeaning:
 
         definitions = item.get("definitions", [])
         for definition in definitions:
-            definition_text = definition.get('definition', '')
+            definition_text = definition.get("definition", "")
             text += f"• {html.escape(decode_string(definition_text))}\n"
             examples = definition.get("examples", [])
             if examples:

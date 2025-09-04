@@ -43,6 +43,6 @@ INNER_ERROR_TEXT = (
 )
 STATISTICS_TEXT = (
     "<b>Here is your vocabulary statistics:</b>\n\n"
-    "{words_count} {word_label} added, next repetition is on "
-    "{next_repetition}.\n\nKeep going! 🙌"
+    "{words_count} {word_label} added. The next repetition is scheduled "
+    "for {next_repetition}.\n\nKeep going! 🙌"
 )

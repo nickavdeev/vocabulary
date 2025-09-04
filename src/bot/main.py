@@ -45,7 +45,7 @@ def send_command(message: Message):
         statistics = get_user_vocabulary(chat_id)
         words_count, next_repetition = (
             statistics["words_count"],
-            statistics["next_repetition"]
+            statistics["next_repetition"],
         )
         if not words_count:
             bot.send_message(
@@ -60,7 +60,9 @@ def send_command(message: Message):
             STATISTICS_TEXT.format(
                 words_count=words_count,
                 word_label="words" if words_count > 1 else "word",
-                next_repetition=next_repetition.strftime("%d %B")
+                next_repetition=(
+                    f"{next_repetition.day} {next_repetition.strftime('%B')}"
+                ),
             ),
             parse_mode="HTML",
         )
