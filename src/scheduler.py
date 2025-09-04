@@ -1,15 +1,16 @@
+import time
 from datetime import timedelta
 
+import schedule
 from db.models import UserStatus
 from db.utils import get_data_to_repeat, update_user_status, update_word_phase
-from schedule import every, repeat, run_pending
 from settings import bot, logger
 from telebot.apihelper import ApiTelegramException
 
 from src.constants import DAYS_BY_PHASES
 
 
-@repeat(every().day.at("10:00", "UTC"))
+@schedule.repeat(schedule.every().day.at("10:00", "UTC"))
 def send_remember_message():
     """Send a reminder to repeat words"""
 
@@ -50,4 +51,9 @@ def send_remember_message():
 
 logger.info("Scheduler started")
 while True:
-    run_pending()
+    schedule.run_pending()
+    wait = int(schedule.idle_seconds())
+    if wait is None:
+        time.sleep(60)
+    else:
+        time.sleep(max(1, min(wait, 60)))
