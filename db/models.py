@@ -2,6 +2,7 @@ from datetime import datetime
 from enum import Enum as StrEnum  # to avoid conflict with Python versions
 
 from sqlalchemy import (
+    BigInteger,
     Column,
     Date,
     DateTime,
@@ -36,7 +37,7 @@ class UserStatus(str, StrEnum):
 class Users(BaseModel):
     __tablename__ = "users"
 
-    telegram_id = Column(Integer(), primary_key=True)
+    telegram_id = Column(BigInteger(), primary_key=True)
     language = Column(String(5), nullable=False, default="en")
     status = Column(
         Enum(UserStatus), nullable=False, default=UserStatus.active
@@ -55,7 +56,7 @@ class Cards(BaseModel):
 
     id = Column(Integer(), primary_key=True)
     telegram_id = Column(
-        Integer(),
+        BigInteger(),
         ForeignKey("users.telegram_id"),
         nullable=False,
     )
