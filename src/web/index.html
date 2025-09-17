@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vocabulary Bot</title>
+  <meta name="description" content="Smart word learning in Telegram using the forgetting curve. Add words in one click, explore meanings, and get timely reminders." />
+  <meta name="theme-color" content="#00796B" />
+
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Telegram_alternative_logo.svg/256px-Telegram_alternative_logo.svg.png" />
+
+  <style>
+    :root {
+      --bg: #00796B;
+      --fg: #f0f8ff; /* aliceblue */
+      --accent: #ffffff;
+      --border: #f0f8ff;
+      --shadow: 0 6px 24px rgba(0,0,0,.18);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--fg);
+      background: var(--bg);
+      display: grid;
+      place-items: center;
+      min-height: 100dvh;
+      padding: 24px;
+    }
+
+    .frame {
+      width: min(100%, 1200px);
+      border: 10px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: clamp(16px, 4vw, 48px);
+    }
+
+    main.container {
+      display: grid;
+      gap: clamp(12px, 2.5vw, 20px);
+      align-items: start;
+      max-width: 60ch;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: clamp(28px, 3.5vw, 48px);
+      height: clamp(28px, 3.5vw, 48px);
+      flex: 0 0 auto;
+      border-radius: 8px;
+    }
+
+    h1 {
+      font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    a.brand {
+      color: var(--fg);
+      text-decoration: none;
+      border-bottom: 2px solid transparent;
+    }
+    a.brand:hover { border-color: rgba(255,255,255,.5); }
+    a.brand:focus-visible {
+      outline: 3px solid #fff;
+      outline-offset: 2px;
+      border-color: transparent;
+    }
+
+    .arrow {
+      inline-size: clamp(18px, 2.5vw, 24px);
+      block-size: clamp(18px, 2.5vw, 24px);
+      color: var(--fg);
+      flex: 0 0 auto;
+    }
+
+    .description {
+      font-weight: 400;
+      font-size: clamp(1.4rem, 5vw, 2.2rem);
+      margin: .25rem 0 0;
+    }
+
+    .caption {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      font-weight: 400;
+      opacity: .95;
+      margin: .25rem 0 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      a.brand, .arrow { transition: all .2s ease; }
+      a.brand:hover + .arrow,
+      .arrow:hover { transform: translate(2px, -2px); }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <main class="container">
+      <header class="header">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Telegram_alternative_logo.svg/256px-Telegram_alternative_logo.svg.png"
+          width="48" height="48" class="logo"
+          alt="Telegram"
+          loading="lazy" decoding="async"
+        />
+        <h1>
+          <a class="brand" href="https://t.me/VocabMateBot" target="_blank" rel="noopener" aria-label="Open VocabMateBot in Telegram">
+            Vocabulary&nbsp;Bot
+          </a>
+          <svg class="arrow" viewBox="0 0 164 164" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <line x1="11.3934" y1="152.815" x2="152.815" y2="11.3934" stroke="currentColor" stroke-width="30" />
+            <line x1="24" y1="15" x2="164" y2="15" stroke="currentColor" stroke-width="30" />
+            <line x1="149" y1="140" x2="149" y2="0" stroke="currentColor" stroke-width="30" />
+          </svg>
+        </h1>
+      </header>
+
+      <p class="description">
+        Smart word learning in&nbsp;Telegram using the&nbsp;forgetting curve
+      </p>
+      <p class="caption">
+        Add&nbsp;words with one&nbsp;click, explore their&nbsp;meaning, and&nbsp;get timely reminders to&nbsp;repeat
+      </p>
+    </main>
+  </div>
+</body>
+</html>
