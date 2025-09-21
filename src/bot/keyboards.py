@@ -5,10 +5,20 @@ from telebot.types import (
     ReplyKeyboardMarkup,
 )
 
-from src.constants import ADD_TO_VOCABULARY_CALLBACK, STATISTICS_BUTTON
+from src.constants import (
+    ADD_TO_VOCABULARY_CALLBACK,
+    PROVIDE_EXAMPLES_CALLBACK,
+    STATISTICS_BUTTON,
+)
 
 
 MAIN_MENU_BUTTONS = [STATISTICS_BUTTON]
+EXAMPLES_KEYBOARD = InlineKeyboardMarkup(row_width=1).add(
+    InlineKeyboardButton(
+        text="Provide examples",
+        callback_data=PROVIDE_EXAMPLES_CALLBACK,
+    ),
+)
 
 
 def get_word_keyboard(word: str) -> InlineKeyboardMarkup:

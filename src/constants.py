@@ -1,7 +1,10 @@
 ADD_TO_VOCABULARY_CALLBACK = "add_to_vocabulary"
+PROVIDE_EXAMPLES_CALLBACK = "provide_examples"
 
 ADDED_TO_VOCABULARY_TEXT = "✔️ Added to vocabulary"
 WORD_IN_VOCABULARY_TEXT = "✔️ <i>This word is already in your vocabulary</i>"
+EXAMPLES_GENERATED_TEXT = "✔️ Examples generated"
+EXAMPLES_GENERATION_FAILED_TEXT = "Examples generation failed"
 
 WELCOME_MESSAGE = (
     "👋 <b>Welcome to the Vocabulary Bot!</b>\n\n"
@@ -21,6 +24,23 @@ DAYS_BY_PHASES = {
     5: 97,
     6: 0,
 }
+
+# Prompts
+
+PROMPT_GETTING_EXAMPLES = """
+You are given a list of English words.
+For each word, write one short and simple example sentence that helps to
+recall its meaning. The output format must strictly follow this structure:
+
+1. word
+<i>Example: [your sentence]</i>
+2. word
+<i>Example: [your sentence]</i>
+...
+
+Here is the list of words:
+{content}"
+"""
 
 # Button names
 

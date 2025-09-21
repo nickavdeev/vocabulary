@@ -4,6 +4,7 @@ import os
 import telebot
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
+from openai import OpenAI
 
 
 load_dotenv()
@@ -44,3 +45,8 @@ logger = logging.getLogger("VocabularyBot")
 ADMIN_USER_TELEGRAM_ID = os.getenv("ADMIN_USER_TELEGRAM_ID")
 TOKEN = os.getenv("BOT_TOKEN")
 bot = telebot.TeleBot(TOKEN)
+
+
+# OpenAI
+
+GPT = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))

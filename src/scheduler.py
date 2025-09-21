@@ -7,6 +7,7 @@ from db.utils import get_data_to_repeat, update_user_status, update_word_phase
 from settings import bot, logger
 from telebot.apihelper import ApiTelegramException
 
+from src.bot.keyboards import EXAMPLES_KEYBOARD
 from src.constants import DAYS_BY_PHASES
 
 
@@ -33,7 +34,12 @@ def send_remember_message():
             text += f"{i}. {word_data['word']}\n"
             update_word_phase(word_data["id"], next_repetition_time)
         try:
-            bot.send_message(telegram_id, text, parse_mode="HTML")
+            bot.send_message(
+                telegram_id,
+                text,
+                parse_mode="HTML",
+                reply_markup=EXAMPLES_KEYBOARD,
+            )
         except ApiTelegramException as e:
             if e.error_code == 403:  # Forbidden
                 update_user_status(telegram_id, UserStatus.inactive)

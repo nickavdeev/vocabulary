@@ -18,7 +18,10 @@ from src.constants import (
     ADD_TO_VOCABULARY_CALLBACK,
     EMPTY_VOCABULARY_TEXT,
     ERROR_TEXT,
+    EXAMPLES_GENERATED_TEXT,
+    EXAMPLES_GENERATION_FAILED_TEXT,
     INNER_ERROR_TEXT,
+    PROVIDE_EXAMPLES_CALLBACK,
     STATISTICS_BUTTON,
     STATISTICS_TEXT,
     WELCOME_MESSAGE,
@@ -26,12 +29,13 @@ from src.constants import (
 )
 from src.custom_types import UserId
 from src.dictionary import get_word_meaning
+from src.utils import get_ai_examples
 
 
 @bot.message_handler(commands=["start", "statistics"])
 @bot.message_handler(func=lambda message: message.text in MAIN_MENU_BUTTONS)
 def send_command(message: Message):
-    logger.info(f"Received a command: {message.text}")
+    logger.info(f"Received a command from {message.chat.id}: {message.text}")
     chat_id = UserId(message.chat.id)
     if message.text == "/start":
         add_user_if_not_exists(chat_id)
@@ -121,6 +125,26 @@ def callback_inline(call: CallbackQuery):
             entities=call.message.entities,
         )
         bot.answer_callback_query(callback_query_id=call.id, text=text)
+    elif call.data == PROVIDE_EXAMPLES_CALLBACK:
+        try:
+            ai_completion = get_ai_examples(call.message.text)
+            text = f"<b>Examples of today’s words</b>\n\n{ai_completion}"
+            callback = EXAMPLES_GENERATED_TEXT
+        except Exception as e:
+            logger.error(e)
+            text = (
+                f"{call.message.text}\n\n"
+                f"<i>Providing examples is not available at the moment.</i>"
+            )
+            callback = EXAMPLES_GENERATION_FAILED_TEXT
+        bot.edit_message_text(
+            chat_id=call.message.chat.id,
+            message_id=call.message.message_id,
+            text=text,
+            entities=call.message.entities,
+            parse_mode="HTML",
+        )
+        bot.answer_callback_query(callback_query_id=call.id, text=callback)
 
 
 if __name__ == "__main__":
