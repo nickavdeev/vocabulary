@@ -1,0 +1,443 @@
+:root {
+    --main: #00796B;
+    --primary-font-family: "Crimson Pro";
+    --secondary-font-family: "Nunito Sans";
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+}
+
+body {
+    background: var(--main);
+}
+
+.container {
+    line-height: 1.6;
+    color: white;
+    z-index: 1;
+}
+
+h1 {
+    font-family: var(--primary-font-family), sans-serif;
+}
+
+/* Navigation Styles */
+.navbar {
+    background: var(--main);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 20px 75px;
+    z-index: 10;
+    position: fixed;
+    width: 100%;
+    top: 0;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: 500;
+    font-family: var(--primary-font-family), sans-serif;
+}
+
+.logo a {
+    text-decoration: none;
+    color: white;
+}
+
+.nav-links {
+    display: flex;
+    font-family: var(--secondary-font-family), serif;
+    gap: 30px;
+    font-size: 1.2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: rgba(255,255,255,0.95);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.nav-links .learn-words-btn {
+    color: var(--main);
+    transition: color 0.3s ease;
+}
+.nav-links .learn-words-btn:hover {
+    color: var(--main);
+}
+
+.learn-words-btn {
+    background: white;
+    font-family: var(--secondary-font-family), serif;
+    padding: 10px 20px 10px;
+    border-radius: 12px;
+    color: var(--main);
+    font-size: 1.2rem;
+    font-weight: 600;
+    border: none;
+    transition-duration: 0.2s;
+    text-decoration: none;
+    display: flex;
+    max-width: fit-content;
+    gap: 7px;
+}
+
+.learn-words-btn:hover {
+    background: #f6f6f6;
+    color: var(--main);
+    cursor: pointer;
+}
+
+/* Hero Section */
+.hero-section {
+    background: var(--main);
+    min-height: 100vh;
+    padding: 10px 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--main);
+}
+
+.hero-content {
+    max-width: 1200px;
+    margin: 30px auto 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+    padding: 90px 0 20px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.hero-text h1 {
+    font-size: 4rem;
+    font-weight: bold;
+    line-height: 4.6rem;
+    margin-bottom: 10px;
+}
+
+.hero-text p {
+    font-size: 2.4rem;
+    font-family: var(--primary-font-family), sans-serif;
+    margin-bottom: 80px;
+}
+
+.phone-mockup {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 25px;
+    padding: 10px;
+    max-width: 320px;
+    margin: 0 auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.phone-mockup video {
+    border-radius: 15px;
+}
+
+/* How It Works Section */
+.how-it-works {
+    background: var(--main);
+    padding: 0 20px;
+    text-align: center;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    font-family: var(--secondary-font-family), serif;
+}
+
+.how-it-works-title {
+    font-size: 4rem;
+    font-family: var(--primary-font-family), sans-serif;
+    font-weight: bold;
+}
+
+.how-it-works-subtitle {
+    font-size: 2rem;
+    opacity: 0.9;
+    margin-bottom: 80px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 60px;
+    margin-bottom: 100px;
+}
+
+.feature {
+    text-align: center;
+}
+
+.feature-icon {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 30px;
+    font-size: 6rem;
+    backdrop-filter: blur(10px);
+}
+
+.feature h3 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.feature p {
+    opacity: 0.9;
+    font-weight: 300;
+    font-size: 1.4rem;
+}
+
+/* Science Section */
+.science-section {
+    text-align: left;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.science-title {
+    font-size: 4rem;
+    font-weight: bold;
+    font-family: var(--primary-font-family), sans-serif;
+}
+
+.science-text {
+    font-weight: 300;
+    font-size: 1.4rem;
+    opacity: 0.9;
+    max-width: 800px;
+}
+
+.science-text a {
+    color: white;
+    transition-duration: 0.2s;
+}
+
+.forgetting-curve {
+    padding: 20px 0;
+    backdrop-filter: blur(10px);
+    position: relative;
+}
+
+.chart-explanation {
+    text-align: right;
+    font-weight: 300;
+    font-size: 1.4rem;
+    opacity: 0.9;
+    position: absolute;
+    max-width: 600px;
+    right: 0;
+}
+
+/* Policy Page Styles */
+.policy {
+    padding-top: 150px;
+}
+
+.policy h1 {
+    font-size: 3rem;
+}
+
+.policy a {
+    color: white;
+}
+
+.policy h2 {
+    font-size: 1.9rem;
+    padding-top: 30px;
+}
+
+.policy p, .policy ul {
+    font-size: 1.25rem;
+    font-weight: 300;
+}
+
+.policy ul {
+    padding-left: 30px;
+    padding-bottom: 20px;
+    padding-top: 10px;
+}
+
+/* Footer */
+.footer {
+    font-family: var(--secondary-font-family), serif;
+    background: #000;
+    margin-top: 200px;
+    padding: 40px 20px 40px;
+    text-align: center;
+}
+
+.footer-cta {
+    font-size: 2.3rem;
+    font-weight: bold;
+    margin-bottom: 30px;
+    font-family: var(--primary-font-family), sans-serif;
+}
+
+.footer .container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.footer .container div {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 60px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 300;
+    line-height: 3rem;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.footer-links span {
+    font-size: 1.8rem;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+.copyright {
+    font-size: .8rem;
+    opacity: 0.5;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .navbar {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+    }
+
+    .hero-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
+    }
+
+    .hero-text {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .hero-text div {
+        display: flex;
+        justify-content: center;
+    }
+
+    .hero-text h1 {
+        font-size: 2.5rem;
+        line-height: 3.2rem;
+    }
+
+    .hero-text p {
+        font-size: 2rem;
+    }
+
+    .phone-mockup {
+        box-shadow: none;
+    }
+
+    .how-it-works-title {
+        line-height: 4rem;
+        padding-top: 40px;
+    }
+
+    .how-it-works-subtitle {
+        font-size: 1.5rem;
+        line-height: 2rem;
+        padding-top: 20px;
+        font-weight: 300;
+    }
+
+    .features-grid {
+        gap: 40px;
+    }
+
+    .nav-links {
+        gap: 15px;
+    }
+
+    .nav-links a {
+        display: none;
+    }
+
+    .science-title {
+        line-height: 4rem;
+        padding-bottom: 20px;
+    }
+
+    .forgetting-curve {
+        display: none;
+    }
+
+    .chart-explanation {
+        padding: 20px;
+        text-align: left;
+    }
+
+    .footer-links {
+        gap: 5px;
+        flex-direction: column;
+    }
+
+    .footer-links span {
+        display: none;
+    }
+
+    /* Policy page mobile styles */
+    .policy {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .policy h1 {
+        font-size: 2.5rem;
+        line-height: 3rem;
+    }
+}
