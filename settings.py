@@ -3,8 +3,8 @@ import os
 
 import telebot
 from dotenv import load_dotenv
-from sqlalchemy import create_engine
 from openai import OpenAI
+from sqlalchemy import create_engine
 
 
 load_dotenv()
