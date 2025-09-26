@@ -384,7 +384,8 @@ h1 {
     }
 
     .how-it-works-title {
-        line-height: 4rem;
+        font-size: 3rem;
+        line-height: 2rem;
         padding-top: 40px;
     }
 
