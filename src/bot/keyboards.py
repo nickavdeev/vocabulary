@@ -7,9 +7,11 @@ from telebot.types import (
 
 from src.constants import (
     ADD_TO_VOCABULARY_CALLBACK,
+    CHOOSE_LANGUAGE_CALLBACK,
     PROVIDE_EXAMPLES_CALLBACK,
     STATISTICS_BUTTON,
 )
+from src.custom_types import LANGUAGES_DATA
 
 
 MAIN_MENU_BUTTONS = [STATISTICS_BUTTON]
@@ -42,5 +44,17 @@ def get_main_keyboard() -> ReplyKeyboardMarkup:
     for button in MAIN_MENU_BUTTONS:
         keyboard.add(
             KeyboardButton(text=button),
+        )
+    return keyboard
+
+
+def get_languages_keyboard() -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(row_width=1)
+    for language in LANGUAGES_DATA.values():
+        keyboard.add(
+            InlineKeyboardButton(
+                text=language.interface_name,
+                callback_data=f"{CHOOSE_LANGUAGE_CALLBACK}-{language.code}",
+            ),
         )
     return keyboard

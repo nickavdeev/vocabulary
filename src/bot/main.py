@@ -5,29 +5,35 @@ from db.utils import (
     get_user_vocabulary,
     is_word_in_vocabulary,
     session,
+    update_user_language,
 )
 from settings import ADMIN_USER_TELEGRAM_ID, bot, logger
 from telebot.types import CallbackQuery, Message
 
 from src.bot.keyboards import (
     MAIN_MENU_BUTTONS,
+    get_languages_keyboard,
     get_main_keyboard,
     get_word_keyboard,
 )
 from src.constants import (
     ADD_TO_VOCABULARY_CALLBACK,
+    CHOOSE_LANGUAGE_CALLBACK,
     EMPTY_VOCABULARY_TEXT,
     ERROR_TEXT,
     EXAMPLES_GENERATED_TEXT,
     EXAMPLES_GENERATION_FAILED_TEXT,
     INNER_ERROR_TEXT,
+    LANGUAGE_UPDATED_CALLBACK_QUERY,
+    LANGUAGE_UPDATED_TEXT,
     PROVIDE_EXAMPLES_CALLBACK,
+    START_TEXT,
     STATISTICS_BUTTON,
     STATISTICS_TEXT,
-    WELCOME_MESSAGE,
+    WELCOME_TEXT,
     WORD_IN_VOCABULARY_TEXT,
 )
-from src.custom_types import UserId
+from src.custom_types import LANGUAGES_DATA, UserId
 from src.dictionary import get_word_meaning
 from src.utils import get_ai_examples
 
@@ -38,12 +44,21 @@ def send_command(message: Message):
     logger.info(f"Received a command from {message.chat.id}: {message.text}")
     chat_id = UserId(message.chat.id)
     if message.text == "/start":
-        add_user_if_not_exists(chat_id)
+        is_new_user = add_user_if_not_exists(chat_id)
+        if is_new_user:
+            bot.send_message(
+                message.chat.id,
+                START_TEXT,
+                parse_mode="HTML",
+                reply_markup=get_languages_keyboard(),
+            )
+            return
         bot.send_message(
             message.chat.id,
-            WELCOME_MESSAGE,
+            WELCOME_TEXT,
             parse_mode="HTML",
             reply_markup=get_main_keyboard(),
+            disable_web_page_preview=True,
         )
     elif message.text in {"/statistics", STATISTICS_BUTTON}:
         statistics = get_user_vocabulary(chat_id)
@@ -145,6 +160,21 @@ def callback_inline(call: CallbackQuery):
             parse_mode="HTML",
         )
         bot.answer_callback_query(callback_query_id=call.id, text=callback)
+    elif call.data.startswith(CHOOSE_LANGUAGE_CALLBACK):
+        code = call.data.split("-")[1]
+        language = LANGUAGES_DATA[code]
+        update_user_language(chat_id, language.code)
+
+        bot.edit_message_text(
+            chat_id=call.message.chat.id,
+            message_id=call.message.message_id,
+            text=LANGUAGE_UPDATED_TEXT.format(lang=language.interface_name),
+            parse_mode="HTML",
+        )
+        bot.answer_callback_query(
+            callback_query_id=call.id,
+            text=LANGUAGE_UPDATED_CALLBACK_QUERY,
+        )
 
 
 if __name__ == "__main__":
