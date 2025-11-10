@@ -4,7 +4,7 @@ from urllib.parse import quote
 import requests
 from bs4 import BeautifulSoup
 
-from src.custom_types import WordMeaning, LanguageCode
+from src.custom_types import LanguageCode, WordMeaning
 
 
 EN_API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en"
@@ -41,10 +41,7 @@ def get_en_word_meaning(word: str) -> WordMeaning:
 
 def get_de_word_meaning(word: str) -> WordMeaning:
     prepared_word = quote(word.strip().replace("/", ""))
-    headers = {"User-Agent": (
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 "
-        "(HTML) Chrome/50.0.2661.102 Safari/537.36"
-    )}
+    headers = {"User-Agent": "VocabularyBot/1.0 (vocabulary@avdeev.me)"}
 
     result = requests.get(
         f"{DE_API_URL}/{prepared_word}", headers=headers
@@ -63,7 +60,10 @@ def get_de_word_meaning(word: str) -> WordMeaning:
         definitions = item.get("definitions", [])
         for definition in definitions:
             definition_text = definition.get("definition", "")
-            text += f"• {html.escape(decode_string(definition_text))}\n"
+            prepared_definition = html.escape(decode_string(definition_text))
+            if not prepared_definition:
+                continue
+            text += f"• {prepared_definition}\n"
             examples = definition.get("examples", [])
             if examples:
                 prepared_text = html.escape(decode_string(examples[0]))

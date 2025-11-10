@@ -1,5 +1,5 @@
-from typing import NewType
 from enum import Enum as StrEnum  # to avoid conflict with Python versions
+from typing import NewType
 
 
 UserId = NewType("UserId", int)

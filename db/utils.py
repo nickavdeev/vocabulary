@@ -1,10 +1,11 @@
+from collections import defaultdict
 from datetime import datetime, timedelta
 
 from db.models import Cards, Status, Users, UserStatus
 from settings import engine, logger
-from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import and_
-from collections import defaultdict
+from sqlalchemy.orm import scoped_session, sessionmaker
+
 from src.constants import ADDED_TO_VOCABULARY_TEXT, DAYS_BY_PHASES
 from src.custom_types import UserId, UserLanguage
 
@@ -38,12 +39,12 @@ def get_data_to_repeat() -> dict:
             Users,
             and_(
                 Users.telegram_id == Cards.telegram_id,
-                Users.language == Cards.language
-            )
+                Users.language == Cards.language,
+            ),
         )
         .filter(
             Cards.next_repetition_on <= datetime.now().date(),
-            Cards.status.in_([Status.in_progress])
+            Cards.status.in_([Status.in_progress]),
         )
         .order_by(
             Cards.telegram_id,
@@ -55,12 +56,14 @@ def get_data_to_repeat() -> dict:
 
     notifications = defaultdict(list)
     for card in data:
-        notifications[card.telegram_id].append({
-            "id": card.id,
-            "phase": card.phase,
-            "next_repetition_on": card.next_repetition_on,
-            "word": card.word,
-        })
+        notifications[card.telegram_id].append(
+            {
+                "id": card.id,
+                "phase": card.phase,
+                "next_repetition_on": card.next_repetition_on,
+                "word": card.word,
+            }
+        )
 
     return dict(notifications)
 
