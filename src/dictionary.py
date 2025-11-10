@@ -4,7 +4,7 @@ from urllib.parse import quote
 import requests
 from bs4 import BeautifulSoup
 
-from src.custom_types import WordMeaning
+from src.custom_types import WordMeaning, LanguageCode
 
 
 EN_API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en"
@@ -41,8 +41,14 @@ def get_en_word_meaning(word: str) -> WordMeaning:
 
 def get_de_word_meaning(word: str) -> WordMeaning:
     prepared_word = quote(word.strip().replace("/", ""))
+    headers = {"User-Agent": (
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 "
+        "(HTML) Chrome/50.0.2661.102 Safari/537.36"
+    )}
 
-    result = requests.get(f"{DE_API_URL}/{prepared_word}").json()
+    result = requests.get(
+        f"{DE_API_URL}/{prepared_word}", headers=headers
+    ).json()
     if not result.get("de"):
         capitalized_word = quote(word.strip().capitalize().replace("/", ""))
         result = requests.get(f"{DE_API_URL}/{capitalized_word}").json()
@@ -67,9 +73,9 @@ def get_de_word_meaning(word: str) -> WordMeaning:
 
 def get_word_meaning(word: str, language: str) -> WordMeaning:
     try:
-        if language == "en":
+        if language == LanguageCode.EN:
             return get_en_word_meaning(word)
-        elif language == "de":
+        elif language == LanguageCode.DE:
             return get_de_word_meaning(word)
     except Exception as e:
         return False, f"Error occurred: {e}"

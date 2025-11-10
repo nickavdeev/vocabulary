@@ -3,7 +3,8 @@ from datetime import datetime, timedelta
 from db.models import Cards, Status, Users, UserStatus
 from settings import engine, logger
 from sqlalchemy.orm import scoped_session, sessionmaker
-
+from sqlalchemy import and_
+from collections import defaultdict
 from src.constants import ADDED_TO_VOCABULARY_TEXT, DAYS_BY_PHASES
 from src.custom_types import UserId, UserLanguage
 
@@ -33,8 +34,17 @@ def update_user_status(telegram_id: UserId, status: UserStatus) -> None:
 def get_data_to_repeat() -> dict:
     data = (
         session.query(Cards)
-        .filter(Cards.next_repetition_on <= datetime.now().date())
-        .filter(Cards.status.in_([Status.in_progress]))
+        .join(
+            Users,
+            and_(
+                Users.telegram_id == Cards.telegram_id,
+                Users.language == Cards.language
+            )
+        )
+        .filter(
+            Cards.next_repetition_on <= datetime.now().date(),
+            Cards.status.in_([Status.in_progress])
+        )
         .order_by(
             Cards.telegram_id,
             Cards.phase,
@@ -43,19 +53,16 @@ def get_data_to_repeat() -> dict:
         .all()
     )
 
-    notifications = {}
+    notifications = defaultdict(list)
     for card in data:
-        telegram_id = card.telegram_id
-        notifications[telegram_id] = notifications.get(telegram_id, [])
-        notifications[telegram_id].append(
-            {
-                "id": card.id,
-                "phase": card.phase,
-                "next_repetition_on": card.next_repetition_on,
-                "word": card.word,
-            }
-        )
-    return notifications
+        notifications[card.telegram_id].append({
+            "id": card.id,
+            "phase": card.phase,
+            "next_repetition_on": card.next_repetition_on,
+            "word": card.word,
+        })
+
+    return dict(notifications)
 
 
 def update_word_phase(card_id: int, next_repetition_on: datetime.date) -> None:
@@ -93,7 +100,10 @@ def add_word_to_vocabulary(telegram_id: UserId, word: str) -> tuple[bool, str]:
 def get_user_vocabulary(telegram_id: UserId) -> dict:
     cards = (
         session.query(Cards)
-        .filter_by(telegram_id=telegram_id)
+        .filter_by(
+            telegram_id=telegram_id,
+            language=get_user_language(telegram_id),
+        )
         .order_by(Cards.next_repetition_on)
         .all()
     )
@@ -113,9 +123,11 @@ def is_word_in_vocabulary(
     )
 
 
-def add_user_if_not_exists(telegram_id: UserId) -> None:
+def add_user_if_not_exists(telegram_id: UserId) -> bool:
     user = session.query(Users).filter_by(telegram_id=telegram_id)
     if not user.first():
         user = Users(telegram_id=telegram_id)
         session.add(user)
         session.commit()
+        return True
+    return False
