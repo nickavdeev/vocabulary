@@ -1,5 +1,7 @@
 :root {
     --main: #00796B;
+    --secondary-main-color: #00655A;
+    --secondary-main-hover-color: #00574c;
     --primary-font-family: "Crimson Pro";
     --secondary-font-family: "Nunito Sans";
 }
@@ -217,6 +219,52 @@ h1 {
     font-size: 1.4rem;
 }
 
+/* Available Languages Section */
+.available-languages {
+    background: var(--main);
+    padding: 0 20px;
+    text-align: center;
+}
+
+.available-languages-title {
+    font-size: 4rem;
+    font-family: var(--primary-font-family), sans-serif;
+    font-weight: bold;
+}
+
+.available-languages-subtitle {
+    font-size: 2rem;
+    opacity: 0.9;
+    margin-bottom: 80px;
+}
+
+.available-languages .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 80px;
+    margin-bottom: 100px;
+}
+
+.available-languages .feature {
+    background-color: var(--secondary-main-color);
+    border-radius: 30px;
+    padding: 1rem 0;
+    color: white;
+    text-decoration: none;
+}
+
+.available-languages .feature:hover {
+    background-color: var(--secondary-main-hover-color);
+}
+
+.available-languages .language-name {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    font-family: var(--primary-font-family), sans-serif;
+}
+
 /* Science Section */
 .science-section {
     text-align: left;
@@ -398,6 +446,33 @@ h1 {
 
     .features-grid {
         gap: 40px;
+    }
+
+    /* Available Languages Section */
+    .available-languages-title {
+        font-size: 3rem;
+        line-height: 3rem;
+        padding-top: 40px;
+    }
+
+    .available-languages-subtitle {
+        font-size: 1.5rem;
+        line-height: 2rem;
+        padding-top: 20px;
+        font-weight: 300;
+        margin-bottom: 50px;
+    }
+
+    .available-languages .features-grid {
+        gap: 40px;
+    }
+
+    .available-languages .feature {
+        padding: 0.5rem 0;
+    }
+
+    .available-languages .language-name {
+        font-size: 3rem;
     }
 
     .nav-links {
