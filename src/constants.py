@@ -21,7 +21,7 @@ DAYS_BY_PHASES = {
 # Prompts
 
 PROMPT_GETTING_EXAMPLES = """
-You are given a list of English words.
+You are given a list of words.
 For each word, write one short and simple example sentence that helps to
 recall its meaning. The output format must strictly follow this structure:
 
@@ -30,6 +30,10 @@ recall its meaning. The output format must strictly follow this structure:
 2. word
 <i>Example: [your sentence]</i>
 ...
+
+If there is only one word:
+1. word
+<i>Example: [your sentence]</i>
 
 Here is the list of words:
 {content}"
@@ -65,7 +69,7 @@ LANGUAGE_UPDATED_TEXT = (
 
 EMPTY_VOCABULARY_TEXT = (
     "🔎 <b>Your vocabulary is empty</b>, but you can expand it: "
-    "just send me an English word, and I’ll give you its definitions."
+    "just send me a word, and I’ll give you its definitions."
 )
 ERROR_TEXT = (
     "👀 Sorry, something went wrong on my side. Please try again later."
