@@ -141,8 +141,10 @@ def callback_inline(call: CallbackQuery):
         )
         bot.answer_callback_query(callback_query_id=call.id, text=text)
     elif call.data == PROVIDE_EXAMPLES_CALLBACK:
+        user_code_language = get_user_language(chat_id)
+        language = LANGUAGES_DATA[user_code_language]
         try:
-            ai_completion = get_ai_examples(call.message.text)
+            ai_completion = get_ai_examples(call.message.text, language.name)
             text = f"<b>Examples of today’s words</b>\n\n{ai_completion}"
             callback = EXAMPLES_GENERATED_TEXT
         except Exception as e:
