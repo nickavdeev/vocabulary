@@ -22,8 +22,8 @@ DAYS_BY_PHASES = {
 
 PROMPT_GETTING_EXAMPLES = """
 You are given a list of words in the {language} language.
-For each word, write one short and simple example sentence in the given 
-language that helps to recall its meaning. The output format must strictly 
+For each word, write one short and simple example sentence in the given
+language that helps to recall its meaning. The output format must strictly
 follow this structure:
 
 1. word
