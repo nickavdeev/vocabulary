@@ -24,6 +24,6 @@ jobs:
           python -m pip install uv
           uv sync --all-extras
 
-      - name: Run linters (isort, flake8)
+      - name: Run linters (ruff)
         run: |
           uv run ruff check
