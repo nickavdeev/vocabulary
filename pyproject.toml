@@ -42,6 +42,7 @@ extend-exclude = [
     "venv",
     "build",
     "dist",
+    "versions",
 ]
 
 line-length = 120

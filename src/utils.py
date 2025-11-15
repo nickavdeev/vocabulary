@@ -1,5 +1,4 @@
 from settings import GPT
-
 from src.constants import PROMPT_GETTING_EXAMPLES
 from src.custom_types import UserLanguage
 

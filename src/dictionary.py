@@ -6,7 +6,6 @@ from bs4 import BeautifulSoup
 
 from src.custom_types import LanguageCode, WordMeaning
 
-
 EN_API_URL = "https://api.dictionaryapi.dev/api/v2/entries/en"
 DE_API_URL = "https://en.wiktionary.org/api/rest_v1/page/definition"
 
@@ -43,9 +42,7 @@ def get_de_word_meaning(word: str) -> WordMeaning:
     prepared_word = quote(word.strip().replace("/", ""))
     headers = {"User-Agent": "VocabularyBot/1.0 (vocabulary@avdeev.me)"}
 
-    result = requests.get(
-        f"{DE_API_URL}/{prepared_word}", headers=headers
-    ).json()
+    result = requests.get(f"{DE_API_URL}/{prepared_word}", headers=headers).json()
     if not result.get("de"):
         capitalized_word = quote(word.strip().capitalize().replace("/", ""))
         result = requests.get(f"{DE_API_URL}/{capitalized_word}").json()

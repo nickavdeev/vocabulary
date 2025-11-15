@@ -13,7 +13,6 @@ from src.constants import (
 )
 from src.custom_types import LANGUAGES_DATA
 
-
 MAIN_MENU_BUTTONS = [STATISTICS_BUTTON]
 EXAMPLES_KEYBOARD = InlineKeyboardMarkup(row_width=1).add(
     InlineKeyboardButton(

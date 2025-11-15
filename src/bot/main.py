@@ -1,3 +1,5 @@
+from telebot.types import CallbackQuery, Message
+
 from db.utils import (
     add_user_if_not_exists,
     add_word_to_vocabulary,
@@ -8,8 +10,6 @@ from db.utils import (
     update_user_language,
 )
 from settings import ADMIN_USER_TELEGRAM_ID, bot, logger
-from telebot.types import CallbackQuery, Message
-
 from src.bot.keyboards import (
     MAIN_MENU_BUTTONS,
     get_languages_keyboard,
@@ -79,9 +79,7 @@ def send_command(message: Message):
             STATISTICS_TEXT.format(
                 words_count=words_count,
                 word_label="words" if words_count > 1 else "word",
-                next_repetition=(
-                    f"{next_repetition.day} {next_repetition.strftime('%B')}"
-                ),
+                next_repetition=(f"{next_repetition.day} {next_repetition.strftime('%B')}"),
             ),
             parse_mode="HTML",
         )
@@ -149,10 +147,7 @@ def callback_inline(call: CallbackQuery):
             callback = EXAMPLES_GENERATED_TEXT
         except Exception as e:
             logger.error(e)
-            text = (
-                f"{call.message.text}\n\n"
-                f"<i>Providing examples is not available at the moment.</i>"
-            )
+            text = f"{call.message.text}\n\n<i>Providing examples is not available at the moment.</i>"
             callback = EXAMPLES_GENERATION_FAILED_TEXT
         bot.edit_message_text(
             chat_id=call.message.chat.id,
