@@ -24,7 +24,7 @@ dev = [
 output-format = "full"
 target-version = "py311"
 
-select = [
+lint.select = [
     "E",
     "W",
     "F",
@@ -47,9 +47,9 @@ extend-exclude = [
 
 line-length = 120
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 10
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 known-first-party = ["src"]
 known-third-party = ["alembic", "beautifulsoup4", "openai", "psycopg2", "pyTelegramBotAPI", "dotenv", "pytz", "schedule"]
