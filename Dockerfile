@@ -1,31 +1,31 @@
-# Multi-stage build для минимизации размера финального образа
-# Этап 1: Builder
+# Multi-stage build to minimize the size of the final image
+# Stage 1: Builder
 FROM python:3.11 AS builder
 
-# Установка UV для управления зависимостями
+# Installing UV for dependency management
 RUN pip install uv
 
-# Установка рабочей директории
+# Setting the working directory
 WORKDIR /app
 
-# Копирование файла проекта
+# Copying the project file
 COPY pyproject.toml ./
 COPY uv.lock ./
 
-# Установка зависимостей с помощью UV
+# Installing dependencies using UV
 RUN uv sync --frozen
 
-# Этап 2: Финальный образ
+# Stage 2: Final image
 FROM python:3.11-slim
 
-# Установка рабочей директории
+# Setting the working directory
 WORKDIR /app
 
-# Копирование установленных зависимостей из builder stage
+# Copying installed dependencies from the builder stage
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 
-# Копирование исходного кода приложения
+# Copying the application source code
 COPY . .
 
-# Команда для запуска бота
+# Command to run the bot
 CMD ["python", "src/bot/main.py"]
