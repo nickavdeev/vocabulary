@@ -14,7 +14,6 @@ from sqlalchemy import (
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
-
 BaseModel = declarative_base()
 
 
@@ -39,14 +38,10 @@ class Users(BaseModel):
 
     telegram_id = Column(BigInteger(), primary_key=True)
     language = Column(String(5), nullable=False, default="en")
-    status = Column(
-        Enum(UserStatus), nullable=False, default=UserStatus.active
-    )
+    status = Column(Enum(UserStatus), nullable=False, default=UserStatus.active)
 
     created_at = Column(DateTime(), default=datetime.now)
-    updated_at = Column(
-        DateTime(), default=datetime.now, onupdate=datetime.now
-    )
+    updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
 
     cards = relationship("Cards", back_populates="user")
 
@@ -67,8 +62,6 @@ class Cards(BaseModel):
     language = Column(String(5), nullable=False, default="en")
 
     created_at = Column(DateTime(), default=datetime.now)
-    updated_at = Column(
-        DateTime(), default=datetime.now, onupdate=datetime.now
-    )
+    updated_at = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
 
     user = relationship("Users", back_populates="cards")

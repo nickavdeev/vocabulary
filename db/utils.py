@@ -1,14 +1,13 @@
 from collections import defaultdict
 from datetime import datetime, timedelta
 
-from db.models import Cards, Status, Users, UserStatus
-from settings import engine, logger
 from sqlalchemy import and_
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+from db.models import Cards, Status, Users, UserStatus
+from settings import engine, logger
 from src.constants import ADDED_TO_VOCABULARY_TEXT, DAYS_BY_PHASES
 from src.custom_types import UserId, UserLanguage
-
 
 session_factory = sessionmaker(bind=engine)
 session = scoped_session(session_factory)
@@ -87,9 +86,7 @@ def add_word_to_vocabulary(telegram_id: UserId, word: str) -> tuple[bool, str]:
             telegram_id=telegram_id,
             word=word,
             language=get_user_language(telegram_id),
-            next_repetition_on=(
-                datetime.now().date() + timedelta(days=DAYS_BY_PHASES[0])
-            ),
+            next_repetition_on=(datetime.now().date() + timedelta(days=DAYS_BY_PHASES[0])),
         )
         session.add(new_card)
         session.commit()
@@ -116,14 +113,8 @@ def get_user_vocabulary(telegram_id: UserId) -> dict:
     }
 
 
-def is_word_in_vocabulary(
-    telegram_id: UserId, word: str, language: UserLanguage
-) -> bool:
-    return bool(
-        session.query(Cards)
-        .filter_by(telegram_id=telegram_id, word=word, language=language)
-        .first()
-    )
+def is_word_in_vocabulary(telegram_id: UserId, word: str, language: UserLanguage) -> bool:
+    return bool(session.query(Cards).filter_by(telegram_id=telegram_id, word=word, language=language).first())
 
 
 def add_user_if_not_exists(telegram_id: UserId) -> bool:

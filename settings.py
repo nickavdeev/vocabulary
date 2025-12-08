@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 from openai import OpenAI
 from sqlalchemy import create_engine
 
-
 load_dotenv()
 
 
@@ -18,9 +17,7 @@ HOST = os.getenv("POSTGRES_HOST", "localhost")
 PORT = os.getenv("POSTGRES_PORT", "5432")
 DATABASE = os.getenv("POSTGRES_DB_NAME", "vocabulary")
 
-engine = create_engine(
-    f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}"
-)
+engine = create_engine(f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")
 
 
 # Logging
@@ -32,10 +29,7 @@ logging.basicConfig(
         logging.StreamHandler(),
     ],
     level=logging.INFO,
-    format=(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s - "
-        "%(filename)s:%(lineno)s"
-    ),
+    format=("%(asctime)s - %(name)s - %(levelname)s - %(message)s - %(filename)s:%(lineno)s"),
 )
 logger = logging.getLogger("VocabularyBot")
 

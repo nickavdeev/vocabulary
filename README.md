@@ -10,20 +10,14 @@
     ```bash
     cp .env.example .env
     ```
-3. Crate virtual environment and activate it:
+3. Install dependencies using UV:
     ```bash
-    python -m venv .venv
-   source .venv/bin/activate
+    uv sync
     ```
-4. Install dependencies: 
-    ```bash
-    pip install -r requirements.txt
-    pip install -r requirements-dev.txt
-    ```
-5. Create `alembic.ini` in root and set up `sqlalchemy.url`
-6. Migrate the database: `alembic upgrade head`
-7. Run the bot: `python src/bot/main.py`
-8. Run the scheduler: `python src/scheduler.py`
+4. Create `alembic.ini` in root and set up `sqlalchemy.url`
+5. Migrate the database: `alembic upgrade head`
+6. Run the bot: `uv run python src/bot/main.py`
+7. Run the scheduler: `uv run python src/scheduler.py`
 
 ## How to Create New Migrations
 1. Add or edit fields in `db.models`

@@ -1,0 +1,55 @@
+[project]
+name = "vocabulary"
+version = "0.1.0"
+description = "A vocabulary learning bot"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "alembic==1.13.2",
+    "beautifulsoup4==4.12.3",
+    "openai==1.108.1",
+    "psycopg2-binary==2.9.9",
+    "pyTelegramBotAPI==4.12.0",
+    "python-dotenv==1.0.0",
+    "pytz==2024.1",
+    "schedule==1.2.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff==0.8.3",
+]
+
+[tool.ruff]
+output-format = "full"
+target-version = "py311"
+
+lint.select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "C",
+    "B",
+    "Q",
+    "N",
+]
+
+extend-exclude = [
+    "__pycache__",
+    ".git",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    "versions",
+]
+
+line-length = 120
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.lint.isort]
+known-first-party = ["src"]
+known-third-party = ["alembic", "beautifulsoup4", "openai", "psycopg2", "pyTelegramBotAPI", "dotenv", "pytz", "schedule"]

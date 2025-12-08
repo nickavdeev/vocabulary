@@ -2,11 +2,11 @@ import time
 from datetime import timedelta
 
 import schedule
+from telebot.apihelper import ApiTelegramException
+
 from db.models import UserStatus
 from db.utils import get_data_to_repeat, update_user_status, update_word_phase
 from settings import bot, logger
-from telebot.apihelper import ApiTelegramException
-
 from src.bot.keyboards import EXAMPLES_KEYBOARD
 from src.constants import DAYS_BY_PHASES
 
@@ -43,10 +43,7 @@ def send_remember_message():
         except ApiTelegramException as e:
             if e.error_code == 403:  # Forbidden
                 update_user_status(telegram_id, UserStatus.inactive)
-            logger.info(
-                f"The user {telegram_id} failed to send a reminder: "
-                f"{e.error_code}, {e.description}"
-            )
+            logger.info(f"The user {telegram_id} failed to send a reminder: {e.error_code}, {e.description}")
             continue
         except Exception as e:
             logger.error(f"Failed to send a reminder: {e}")

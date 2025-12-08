@@ -47,8 +47,7 @@ STATISTICS_BUTTON = "📊 Statistics"
 # Texts
 
 START_TEXT = (
-    "👋 <b>Welcome to the Vocabulary Bot!</b>\n\n"
-    "Before we begin, please choose the language you want to learn:"
+    "👋 <b>Welcome to the Vocabulary Bot!</b>\n\nBefore we begin, please choose the language you want to learn:"
 )
 
 WELCOME_TEXT = (
@@ -69,17 +68,11 @@ LANGUAGE_UPDATED_TEXT = (
 )
 
 EMPTY_VOCABULARY_TEXT = (
-    "🔎 <b>Your vocabulary is empty</b>, but you can expand it: "
-    "just send me a word, and I’ll give you its definitions."
+    "🔎 <b>Your vocabulary is empty</b>, but you can expand it: just send me a word, and I’ll give you its definitions."
 )
-ERROR_TEXT = (
-    "👀 Sorry, something went wrong on my side. Please try again later."
-)
+ERROR_TEXT = "👀 Sorry, something went wrong on my side. Please try again later."
 INNER_ERROR_TEXT = (
-    "💥 <b>New error</b>\n\n"
-    "User: <i>{chat_id}</i>\n"
-    "Message: <i>{message_text}</i>\n"
-    "Error text: <pre>{error_text}</pre>"
+    "💥 <b>New error</b>\n\nUser: <i>{chat_id}</i>\nMessage: <i>{message_text}</i>\nError text: <pre>{error_text}</pre>"
 )
 STATISTICS_TEXT = (
     "<b>Here is your vocabulary statistics:</b>\n\n"
