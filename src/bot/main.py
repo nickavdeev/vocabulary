@@ -1,4 +1,5 @@
-from telebot.types import CallbackQuery, Message
+from flask import Flask, jsonify, request
+from telebot.types import CallbackQuery, Message, Update
 
 from db.utils import (
     add_user_if_not_exists,
@@ -9,7 +10,7 @@ from db.utils import (
     session,
     update_user_language,
 )
-from settings import ADMIN_USER_TELEGRAM_ID, bot, logger
+from settings import ADMIN_USER_TELEGRAM_ID, ENVIRONMENT, WEBHOOK_PORT, WEBHOOK_URL, bot, logger
 from src.bot.keyboards import (
     MAIN_MENU_BUTTONS,
     get_languages_keyboard,
@@ -36,6 +37,8 @@ from src.constants import (
 from src.custom_types import LANGUAGES_DATA, UserId
 from src.dictionary import get_word_meaning
 from src.utils import get_ai_examples
+
+app = Flask(__name__)
 
 
 @bot.message_handler(commands=["start", "statistics"])
@@ -174,9 +177,35 @@ def callback_inline(call: CallbackQuery):
         )
 
 
+@app.route("/vocabulary/webhook", methods=["POST"])
+def webhook():
+    if request.headers.get("content-type") == "application/json":
+        json_string = request.get_data().decode("utf-8")
+        update = Update.de_json(json_string)
+        bot.process_new_updates([update])
+        return "", 200
+    else:
+        return "", 403
+
+
+@app.route("/vocabulary/health", methods=["GET"])
+def index():
+    return jsonify({"status": "ok"}), 200
+
+
 if __name__ == "__main__":
     logger.info("Bot started")
-    bot.infinity_polling()
+    if ENVIRONMENT == "production":
+        app.run(
+            host="0.0.0.0",
+            port=WEBHOOK_PORT,
+            debug=False,
+            use_reloader=True,
+        )
+        bot.set_webhook(url=WEBHOOK_URL)
+    else:
+        bot.infinity_polling()
+
     logger.info("Bot stopped")
     session.close()
     logger.info("Session closed")

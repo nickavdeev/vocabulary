@@ -9,6 +9,9 @@ from sqlalchemy import create_engine
 load_dotenv()
 
 
+ENVIRONMENT = os.getenv("ENVIRONMENT")
+
+
 # Postgres
 
 USER = os.getenv("POSTGRES_USER", "postgres")
@@ -38,6 +41,8 @@ logger = logging.getLogger("VocabularyBot")
 
 ADMIN_USER_TELEGRAM_ID = os.getenv("ADMIN_USER_TELEGRAM_ID")
 TOKEN = os.getenv("BOT_TOKEN")
+WEBHOOK_URL = os.getenv("WEBHOOK_URL")
+WEBHOOK_PORT = int(os.getenv("WEBHOOK_PORT"))
 bot = telebot.TeleBot(TOKEN)
 
 

@@ -40,12 +40,12 @@ def get_en_word_meaning(word: str) -> WordMeaning:
 
 def get_de_word_meaning(word: str) -> WordMeaning:
     prepared_word = quote(word.strip().replace("/", ""))
-    headers = {"User-Agent": "VocabularyBot/1.0 (vocabulary@avdeev.me)"}
+    headers = {"User-Agent": "VocabularyBot/1.1 (vocabulary@avdeev.me)"}
 
     result = requests.get(f"{DE_API_URL}/{prepared_word}", headers=headers).json()
     if not result.get("de"):
         capitalized_word = quote(word.strip().capitalize().replace("/", ""))
-        result = requests.get(f"{DE_API_URL}/{capitalized_word}").json()
+        result = requests.get(f"{DE_API_URL}/{capitalized_word}", headers=headers).json()
         if not result.get("de"):
             return False, "Word not found"
 
