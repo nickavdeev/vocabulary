@@ -2,12 +2,12 @@ from flask import Flask, jsonify, request
 from telebot.types import CallbackQuery, Message, Update
 
 from db.utils import (
+    Session,
     add_user_if_not_exists,
     add_word_to_vocabulary,
     get_user_language,
     get_user_vocabulary,
     is_word_in_vocabulary,
-    session,
     update_user_language,
 )
 from settings import ADMIN_USER_TELEGRAM_ID, ENVIRONMENT, WEBHOOK_PORT, WEBHOOK_URL, bot, logger
@@ -196,16 +196,16 @@ def index():
 if __name__ == "__main__":
     logger.info("Bot started")
     if ENVIRONMENT == "production":
+        bot.set_webhook(url=WEBHOOK_URL)
         app.run(
             host="0.0.0.0",
             port=WEBHOOK_PORT,
             debug=False,
-            use_reloader=True,
+            use_reloader=False,
         )
-        bot.set_webhook(url=WEBHOOK_URL)
     else:
         bot.infinity_polling()
 
     logger.info("Bot stopped")
-    session.close()
+    Session.remove()
     logger.info("Session closed")
