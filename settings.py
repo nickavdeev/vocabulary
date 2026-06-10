@@ -20,7 +20,13 @@ HOST = os.getenv("POSTGRES_HOST", "localhost")
 PORT = os.getenv("POSTGRES_PORT", "5432")
 DATABASE = os.getenv("POSTGRES_DB_NAME", "vocabulary")
 
-engine = create_engine(f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")
+engine = create_engine(
+    f"postgresql://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}",
+    pool_pre_ping=True,
+    pool_recycle=1800,
+    pool_size=5,
+    max_overflow=10,
+)
 
 
 # Logging
